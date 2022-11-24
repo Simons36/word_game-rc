@@ -4,7 +4,7 @@
 int main(int argc, char *argv[]){
 
     set_ips(argc, argv);
-    printf("%s\n", gsip);
+    printf("%s\n", gsport);
 
     return 0;
 }
