@@ -1,13 +1,11 @@
-#include "../inc/client.h"
+#include "../include/client.h"
+#include"../include/network.h"
 
 int main(int argc, char *argv[]){
-    for(int i = 1; i < argc; i+=2){
-        if(!strcmp(argv[i], "-n")){
-            gsip = argv[i+1];
-        }else if(!strcmp(argv[i], "-p")){
-            gsport = argv[i+1];
-        }
-    }
-    printf("%s\n", gsport);
+
+    set_ips(argc, argv);
+    printf("%s\n", gsip);
+
     return 0;
 }
+

@@ -14,8 +14,8 @@ CLIENT_OBJ = $(patsubst $(CLIENT)/source/%.c,$(CLIENT)/object/%.o,$(CLIENT_SRC))
 SERVER_BIN = $(SERVER)/bin/server
 CLIENT_BIN = $(CLIENT)/bin/client
 
-SERVER_INC = $(wildcard $(SERVER)/inc/*.h)
-CLIENT_INC = $(wildcard $(CLIENT)/inc/*.h)
+SERVER_INC = $(wildcard $(SERVER)/include/*.h)
+CLIENT_INC = $(wildcard $(CLIENT)/include/*.h)
 
 all: client-lib.o client server
 
@@ -43,3 +43,4 @@ $(SERVER)/object/%.o: $(SERVER)/source/%.c $(SERVER_INC)
 
 clean:
 	rm -f $(SERVER_OBJ) $(CLIENT_OBJ) $(SERVER_BIN) $(CLIENT_BIN) $(CLIENT)/object/client-lib.o
+
