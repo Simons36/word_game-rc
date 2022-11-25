@@ -12,6 +12,6 @@
 #include <netdb.h>
 
 void set_ips(int argc, char * argv[]);
-void udp_send();
+void *udp_send();
 
 #endif
