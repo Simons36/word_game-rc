@@ -1,6 +1,8 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
+#define GN 1
+
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
