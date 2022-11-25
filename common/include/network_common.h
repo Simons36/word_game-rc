@@ -7,4 +7,6 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 
+#define SERVER_PORT "58015"
+
 #endif

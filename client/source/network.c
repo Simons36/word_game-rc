@@ -41,7 +41,6 @@ void udp_connection(void *buffer_msg, size_t len_msg){
     hints.ai_socktype = SOCK_DGRAM; //UDP socket
 
 
-    gsip = "tejo.tecnico.ulisboa.pt";
     errcode = getaddrinfo(gsip, gsport, &hints,&res);
     if(errcode!=0) exit(1); //error
 
