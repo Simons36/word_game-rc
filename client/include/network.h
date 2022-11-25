@@ -2,7 +2,8 @@
 #define NETWORK_H
 
 #define LOCALHOST_IP "127.0.0.1"
-#define SERVER_PORT "58015"
+#define SERVER_PORT "58001"
+#define BUFFER_SIZE 128
 
 #include "client.h"
 #include <sys/types.h>
@@ -12,6 +13,6 @@
 #include <netdb.h>
 
 void set_ips(int argc, char * argv[]);
-void *udp_send();
+void udp_connection(void *buffer_msg, size_t len_msg);
 
 #endif

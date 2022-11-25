@@ -24,7 +24,7 @@ void set_ips(int argc, char* argv[]){
     }
 }
 
-void *udp_send(void *buffer_msg, size_t len_msg){
+void udp_connection(void *buffer_msg, size_t len_msg){
     int fd,errcode;
     ssize_t n;
     socklen_t addrlen;
@@ -41,17 +41,21 @@ void *udp_send(void *buffer_msg, size_t len_msg){
     hints.ai_socktype = SOCK_DGRAM; //UDP socket
 
 
+    gsip = "tejo.tecnico.ulisboa.pt";
     errcode = getaddrinfo(gsip, gsport, &hints,&res);
     if(errcode!=0) exit(1); //error
 
     n = sendto(fd, buffer_msg, len_msg, 0, res->ai_addr, res->ai_addrlen);
     if(n==-1) exit(1); //error
+    printf("sent: %zd\n", n);
+
 
     addrlen = sizeof(addr);
-    n = recvfrom(fd,buffer,128,0,
+    n = recvfrom(fd,buffer,BUFFER_SIZE,0,
         (struct sockaddr*)&addr,&addrlen);
 
     if(n==-1) exit(1); //error
+    printf("received: %zd\n", n);
 
     freeaddrinfo(res);
     close(fd);

@@ -1,5 +1,7 @@
 #include "../include/commands.h"
 
-void sng_command(){
+/*
+size_t sng_command(int plid, void*){
     
 }
+*/

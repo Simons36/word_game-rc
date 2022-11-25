@@ -3,6 +3,7 @@ CFLAGS = -Wall -g -O2
 
 SERVER = server
 CLIENT = client
+COMMON = common
 
 
 SERVER_SRC = $(wildcard $(SERVER)/source/*.c)
@@ -14,8 +15,8 @@ CLIENT_OBJ = $(patsubst $(CLIENT)/source/%.c,$(CLIENT)/object/%.o,$(CLIENT_SRC))
 SERVER_BIN = $(SERVER)/bin/server
 CLIENT_BIN = $(CLIENT)/bin/client
 
-SERVER_INC = $(wildcard $(SERVER)/include/*.h)
-CLIENT_INC = $(wildcard $(CLIENT)/include/*.h)
+SERVER_INC = $(wildcard $(SERVER)/include/*.h,$(COMMON)/include/*.h)
+CLIENT_INC = $(wildcard $(CLIENT)/include/*.h,$(COMMON)/include/*.h)
 
 all: client-lib.o client server
 
@@ -33,7 +34,7 @@ client: $(CLIENT_OBJ)
 $(CLIENT)/object/%.o: $(CLIENT)/source/%.c $(CLIENT_INC)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-tree-server: $(SERVER_OBJ)
+server: $(SERVER_OBJ)
 	$(CC) $(CFLAGS) -o $(SERVER_BIN) $(SERVER_OBJ)
 
 $(SERVER)/object/%.o: $(SERVER)/source/%.c $(SERVER_INC)
