@@ -7,9 +7,10 @@
 #include <string.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <unistd.h>
 
-char *gsip;
-char *gsport;
-int plid;
+extern char *gsip;
+extern char *gsport;
+extern int plid;
 
 #endif

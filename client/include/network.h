@@ -2,20 +2,16 @@
 #define NETWORK_H
 
 #define LOCALHOST_IP "127.0.0.1"
-
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <arpa/inet.h>
-#include <unistd.h>
+#define SERVER_PORT "58015"
 
 #include "client.h"
-
-struct addrinfo hints,*res,*p;
-int errcode;
-char buffer[INET_ADDRSTRLEN];
-struct in_addr *addr;
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netdb.h>
 
 void set_ips(int argc, char * argv[]);
+void udp_send();
 
 #endif
