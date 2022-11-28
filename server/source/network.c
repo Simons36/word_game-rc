@@ -1,4 +1,5 @@
 #include "../include/network.h"
+#include "../include/operations.h"
 
 char *gsip;
 char *gsport;
@@ -35,14 +36,13 @@ void udp_connection(void *buffer_msg, size_t msg_len){
             (struct sockaddr*)&addr,&addrlen);
         if(n==-1)/*error*/exit(1);
 
-        /*
+        
         k = write(1,"received: ",10);
         if(k != 10) exit(1);
 
         k = write(1,buffer,n);
         if(k != n) exit(1);
-        */
-
+        
         len_response = process_request(buffer, n);
 
         n=sendto(fd,buffer,n,0,
