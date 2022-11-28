@@ -3,6 +3,8 @@
 
 #include "client.h"
 
-void sng_command();
+#define START_MSG "SNG"
+
+int start_command(char* plid);
 
 #endif

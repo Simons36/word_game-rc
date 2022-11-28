@@ -18,15 +18,12 @@ CLIENT_BIN = $(CLIENT)/bin/client
 SERVER_INC = $(wildcard $(SERVER)/include/*.h,$(COMMON)/include/*.h)
 CLIENT_INC = $(wildcard $(CLIENT)/include/*.h,$(COMMON)/include/*.h)
 
-all: client-lib.o client server
+all: client server
 
 $(shell mkdir -p $(SERVER)/object)
 $(shell mkdir -p $(SERVER)/bin)
 $(shell mkdir -p $(CLIENT)/object)
 $(shell mkdir -p $(CLIENT)/bin)
-
-client-lib.o: $(CLIENT_OBJ)
-	$(CC) $(CFLAGS) -o $(CLIENT)/object/client-lib.o $(CLIENT_OBJ)
 
 client: $(CLIENT_OBJ)
 	$(CC) $(CFLAGS) -o $(CLIENT_BIN) $(CLIENT_OBJ)
@@ -43,5 +40,5 @@ $(SERVER)/object/%.o: $(SERVER)/source/%.c $(SERVER_INC)
 .PHONY: clean
 
 clean:
-	rm -f $(SERVER_OBJ) $(CLIENT_OBJ) $(SERVER_BIN) $(CLIENT_BIN) $(CLIENT)/object/client-lib.o
+	rm -f $(SERVER_OBJ) $(CLIENT_OBJ) $(SERVER_BIN) $(CLIENT_BIN)
 

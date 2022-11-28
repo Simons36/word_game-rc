@@ -11,10 +11,11 @@ void udp_connection(void *buffer_msg, size_t msg_len){
     struct sockaddr_in addr;
     char buffer[128];
 
-
+    /*create the socket*/
     fd=socket(AF_INET,SOCK_DGRAM,0); //UDP socket
     if(fd==-1) /*error*/exit(1);
 
+    
     memset(&hints,0,sizeof hints);
     hints.ai_family=AF_INET; // IPv4
     hints.ai_socktype=SOCK_DGRAM; // UDP socket

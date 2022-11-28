@@ -1,8 +1,11 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include "../../common/include/common.h"
+#include "../../common/common.h"
 
-extern int plid;
+#define START_COM "start"
+#define START_COM_SHORT "sg"
+
+#define EXIT_COM "exit"
 
 #endif

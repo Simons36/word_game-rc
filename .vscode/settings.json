@@ -1,6 +1,7 @@
 {
   "files.associations": {
-    "network.h": "c"
+    "network.h": "c",
+    "client.h": "c"
   },
   "C_Cpp.errorSquiggles": "enabled"
 }

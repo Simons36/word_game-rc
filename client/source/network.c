@@ -4,14 +4,11 @@ char *gsip;
 char *gsport;
 int plid;
 
-void set_ips(int argc, char* argv[]){
-    /*
-    char buffer[128];
-    if(gethostname(buffer, 128) == -1)
-        fprintf(stderr,"error: %s\n",strerror(errno));
-
-    printf("ip: %s\n", buffer);
-        */
+/**
+ * @brief Set the server ip and port to connect to
+ * 
+ */
+int set_ips(int argc, char* argv[]){
     gsip = LOCALHOST_IP;
     gsport = SERVER_PORT;
 
@@ -20,11 +17,15 @@ void set_ips(int argc, char* argv[]){
             gsip = argv[i+1];
         }else if(!strcmp(argv[i], "-p")){
             gsport = argv[i+1];
+        }else{
+            printf("Invalid argument: %s\n", argv[i]);
+            return EXIT_FAILURE;
         }
     }
+    return 0;
 }
 
-void udp_connection(void *buffer_msg, size_t len_msg){
+void send_msg_udp(void *buffer_msg, size_t len_msg){
     int fd,errcode;
     ssize_t n;
     socklen_t addrlen;

@@ -5,7 +5,7 @@
 #define BUFFER_SIZE 128
 
 #include "client.h"
-#include "../../common/include/network_common.h"
+#include "../../common/network_common.h"
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -16,7 +16,7 @@
 extern char *gsip;
 extern char *gsport;
 
-void set_ips(int argc, char * argv[]);
-void udp_connection(void *buffer_msg, size_t len_msg);
+int set_ips(int argc, char * argv[]);
+void send_msg_udp(void *buffer_msg, size_t len_msg);
 
 #endif
