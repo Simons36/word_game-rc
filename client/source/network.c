@@ -1,27 +1,27 @@
 #include "../include/network.h"
 
-char *gsip;
-char *gsport;
-int plid;
+gs_net_info gs_ip_port;
 
 /**
  * @brief Set the server ip and port to connect to
  * 
  */
 int set_ips(int argc, char* argv[]){
-    gsip = LOCALHOST_IP;
-    gsport = SERVER_PORT;
+    gs_ip_port.gsip = LOCALHOST_IP;
+    gs_ip_port.gsport = SERVER_PORT;
 
     for(int i = 1; i < argc; i+=2){
         if(!strcmp(argv[i], "-n")){
-            gsip = argv[i+1];
+            gs_ip_port.gsip = argv[i+1];
         }else if(!strcmp(argv[i], "-p")){
-            gsport = argv[i+1];
+            gs_ip_port.gsport = argv[i+1];
         }else{
             printf("Invalid argument: %s\n", argv[i]);
             return EXIT_FAILURE;
         }
     }
+    printf("gsip: %s\n", gs_ip_port.gsip);
+    printf("gsport: %s\n", gs_ip_port.gsport);
     return 0;
 }
 
@@ -42,7 +42,7 @@ void send_msg_udp(void *buffer_msg, size_t len_msg){
     hints.ai_socktype = SOCK_DGRAM; //UDP socket
 
 
-    errcode = getaddrinfo(gsip, gsport, &hints,&res);
+    errcode = getaddrinfo(gs_ip_port.gsip, gs_ip_port.gsport, &hints,&res);
     if(errcode!=0) exit(1); //error
 
     n = sendto(fd, buffer_msg, len_msg, 0, res->ai_addr, res->ai_addrlen);

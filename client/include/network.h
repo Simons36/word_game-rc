@@ -13,8 +13,12 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 
-extern char *gsip;
-extern char *gsport;
+typedef struct gs_net{
+    char *gsip;
+    char *gsport;
+}gs_net_info;
+
+extern gs_net_info gs_ip_port;
 
 int set_ips(int argc, char * argv[]);
 void send_msg_udp(void *buffer_msg, size_t len_msg);
