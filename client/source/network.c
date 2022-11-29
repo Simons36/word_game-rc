@@ -56,7 +56,7 @@ void send_msg_udp(void *buffer_msg, size_t len_msg){
 
     if(n==-1) exit(1); //error
     printf("received: %zd\n", n);
-
+    printf("%s", buffer);
     freeaddrinfo(res);
     close(fd);
 }
