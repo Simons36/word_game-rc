@@ -14,5 +14,6 @@ typedef struct client_info{
 
 int check_player(int plid);
 char * put_player(int plid);
+char *pick_word_from_file(int n_line);
 
 #endif

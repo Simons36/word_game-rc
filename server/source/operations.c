@@ -10,8 +10,11 @@ char * process_request(char * buffer_request){
     if(!strcmp(command, START_OP_CODE)){
         char *resp = (char*)malloc(sizeof(char)*128);
         if(!start_input_correct(buffer_request, &resp)){
+            free(resp);
             return "RSG NOK\n";
         }
+        strcpy(resp, "RSG ");
+        
         strcat(resp, "\n");
         return resp;
     }/*else if{
@@ -39,10 +42,7 @@ int start_func(char * buffer_request){
 
 int start_input_correct(char *input, char **resp){
     int plid;
-    if(input[3] != ' ' || (plid = start_func(&input[4])) == EXIT_FAILURE){
-        return FALSE;
-    }
-    if((*resp = put_player(plid)) == NULL){
+    if(input[3] != ' ' || (plid = start_func(&input[4])) == EXIT_FAILURE || (*resp = put_player(plid)) == NULL){
         return FALSE;
     }
     return TRUE;
