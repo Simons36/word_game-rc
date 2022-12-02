@@ -13,7 +13,7 @@ char * process_request(char * buffer_request){
             free(resp);
             return "RSG NOK\n";
         }
-        strcpy(resp, "RSG ");
+        strcpy(resp, "RSG OK 3 7");
         
         strcat(resp, "\n");
         return resp;
