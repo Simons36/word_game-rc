@@ -20,6 +20,7 @@ int start_command(char* plid){
     free(sng_msg[0]);
     free(sng_msg[1]);
     free(sng_msg);
+    free(msg);
 
     return 0;
 }

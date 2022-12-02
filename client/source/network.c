@@ -20,8 +20,12 @@ int set_ips(int argc, char* argv[]){
             return EXIT_FAILURE;
         }
     }
-    printf("gsip: %s\n", gs_ip_port.gsip);
-    printf("gsport: %s\n", gs_ip_port.gsport);
+
+    if(DEV_MODE){
+        printf("con: gsip: %s\n", gs_ip_port.gsip);
+        printf("con: gsport: %s\n", gs_ip_port.gsport);
+    }
+
     return 0;
 }
 
@@ -47,7 +51,10 @@ void send_msg_udp(void *buffer_msg, size_t len_msg){
 
     n = sendto(fd, buffer_msg, len_msg, 0, res->ai_addr, res->ai_addrlen);
     if(n==-1) exit(1); //error
-    printf("sent: %zd\n", n);
+
+    if(DEV_MODE){
+        printf("con: sent: %zd\n", n);   
+    }
 
 
     addrlen = sizeof(addr);
@@ -55,8 +62,12 @@ void send_msg_udp(void *buffer_msg, size_t len_msg){
         (struct sockaddr*)&addr,&addrlen);
 
     if(n==-1) exit(1); //error
-    printf("received: %zd\n", n);
-    printf("%s", buffer);
+
+    if(DEV_MODE){
+        printf("con: received: %zd\n", n);
+        printf("con: msg: %s", buffer);
+    }
+        
     freeaddrinfo(res);
     close(fd);
 }
