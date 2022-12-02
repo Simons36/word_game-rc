@@ -3,4 +3,6 @@
 
 #include "../../common/common.h"
 
+extern int verbose_flag;
+
 #endif

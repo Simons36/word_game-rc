@@ -10,7 +10,7 @@ int start_command(char* plid){
 
     char resp[128];
     char temp[4];
-    
+
 
     sng_msg[0] = (char*)malloc(strlen(START_MSG) + 1);
     sng_msg[1] = (char*) malloc(strlen(plid) + 1);
@@ -18,7 +18,7 @@ int start_command(char* plid){
     strcpy(sng_msg[1], plid);
 
     msg_len = parse_msg(sng_msg, msg, 2);
-    
+
     strcpy(resp, send_msg_udp(msg, msg_len));
 
     if(sscanf(resp, "%s", temp) != 1) return EXIT_FAILURE;
@@ -39,6 +39,7 @@ int start_command(char* plid){
             print_word();
         }
     }
+
 
     free(sng_msg[0]);
     free(sng_msg[1]);

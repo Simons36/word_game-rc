@@ -35,7 +35,11 @@ int* put_player(int plid){
 
             sess_info[i]->max_errors = get_guesses_max(len_word);
             ret[1] = sess_info[i]->max_errors;
-            printf("debug: %d\n", ret[0]);
+
+            if(verbose_flag){
+                printf("PLID=%d: new game; word = \"%s\" (%d letters)\n", plid, sess_info[i]->word_to_guess, len_word);
+            }
+
             return ret;
         }
     }

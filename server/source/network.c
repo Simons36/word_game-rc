@@ -1,12 +1,31 @@
 #include "../include/network.h"
 #include "../include/operations.h"
 
-char *gsip;
 char *gsport;
+int verbose_flag = FALSE;
 
-void udp_connection(void *buffer_msg, size_t msg_len){
+
+int set_args(int argc, char *argv[]){
+    gsport = SERVER_PORT;
+
+    for(int i = 1; i < argc; i+=2){
+        if(!strcmp(argv[i], "-v")){
+            verbose_flag = TRUE;
+        }else if(!strcmp(argv[i], "-p")){
+            gsport = argv[i+1];
+        }else{
+            printf("Invalid argument: %s\n", argv[i]);
+            return EXIT_FAILURE;
+        }
+    }
+
+    return 0;
+}
+
+
+void udp_connection(){
     int fd,errcode;
-    ssize_t n, k;
+    ssize_t n;
     socklen_t addrlen;
     struct addrinfo hints,*res;
     struct sockaddr_in addr;
@@ -22,7 +41,7 @@ void udp_connection(void *buffer_msg, size_t msg_len){
     hints.ai_socktype=SOCK_DGRAM; // UDP socket
     hints.ai_flags=AI_PASSIVE;
 
-    errcode=getaddrinfo(NULL, SERVER_PORT,&hints,&res);
+    errcode=getaddrinfo(NULL, gsport,&hints,&res);
     if(errcode!=0) /*error*/ exit(1);
 
     n=bind(fd,res->ai_addr, res->ai_addrlen);
@@ -36,12 +55,13 @@ void udp_connection(void *buffer_msg, size_t msg_len){
             (struct sockaddr*)&addr,&addrlen);
         if(n==-1)/*error*/exit(1);
 
-        
+        /*
         k = write(1,"received: ",10);
         if(k != 10) exit(1);
 
         k = write(1,buffer,n);
         if(k != n) exit(1);
+        */
         
         response = process_request(buffer);
 
@@ -60,6 +80,7 @@ void tcp_connection(){
     struct addrinfo hints,*res;
     struct sockaddr_in addr;
     char buffer[128];
+    int newfd;
 
     fd=socket(AF_INET,SOCK_STREAM,0); //TCP socket
     if (fd==-1) exit(1); //error
@@ -76,17 +97,21 @@ void tcp_connection(){
     if(n==-1) /*error*/ exit(1);
     
     if(listen(fd,5)==-1)/*error*/exit(1);
+
     while(1){
-    addrlen=sizeof(addr);
-    if((newfd=accept(fd,(struct sockaddr*)&addr,
-    &addrlen))==-1
-    /*error*/ exit(1);
-    n=read(newfd,buffer,128);
-    if(n==-1)/*error*/exit(1);
-    write(1,"received: ",10);write(1,buffer,n);
-    n=write(newfd,buffer,n);
-    if(n==-1)/*error*/exit(1);
-    close(newfd);
+        addrlen=sizeof(addr);
+
+        if((newfd = accept(fd,(struct sockaddr*)&addr, &addrlen))==-1)
+        /*error*/ exit(1);
+
+        n=read(newfd,buffer,128);
+        if(n==-1)/*error*/exit(1);
+
+        write(1,"received: ",10);write(1,buffer,n);
+        n=write(newfd,buffer,n);
+
+        if(n==-1)/*error*/exit(1);
+        close(newfd);
     }
     freeaddrinfo(res);
     close(fd);

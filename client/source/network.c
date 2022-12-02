@@ -45,6 +45,8 @@ char* send_msg_udp(void *buffer_msg, size_t len_msg){
     hints.ai_family = AF_INET; //IPv4
     hints.ai_socktype = SOCK_DGRAM; //UDP socket
 
+    /*setsockopt(fd, IPPROTO_UDP, SO_RCVTIMEO, )*/
+
 
     errcode = getaddrinfo(gs_ip_port.gsip, gs_ip_port.gsport, &hints,&res);
     if(errcode!=0) exit(1); //error
@@ -72,5 +74,37 @@ char* send_msg_udp(void *buffer_msg, size_t len_msg){
     close(fd);
 
     return &buffer[0];
+}
+
+void send_msg_tcp(void *buffer_msg, size_t len_msg){
+    int fd,errcode;
+    ssize_t n;
+    struct addrinfo hints,*res;
+    char buffer[128];
+
+    fd=socket(AF_INET,SOCK_STREAM,0); //TCP socket
+    if (fd==-1) exit(1); //error
+
+    memset(&hints,0,sizeof hints);
+    hints.ai_family=AF_INET; //IPv4
+    hints.ai_socktype=SOCK_STREAM; //TCP socket
+
+    errcode = getaddrinfo(gs_ip_port.gsip, gs_ip_port.gsport,&hints,&res);
+    if(errcode!=0)/*error*/exit(1);
+
+    n=connect(fd,res->ai_addr,res->ai_addrlen);
+    if(n==-1)/*error*/exit(1);
+
+    n=write(fd,"Hello!\n",7);
+    if(n==-1)/*error*/exit(1);
+
+    n=read(fd,buffer,128);
+    if(n==-1)/*error*/exit(1);
+
+    write(1,"echo: ",6); 
+    write(1,buffer,n);
+
+    freeaddrinfo(res);
+    close(fd);
 }
 

@@ -30,13 +30,6 @@ int start_func(char * buffer_request){
     }
 
     sscanf(buffer_request, "%s", plid);
-    
-    /*
-    if(plid < 100000 || plid > 999999){
-        printf("Error: invalid plid\n");
-        return EXIT_FAILURE;
-    }
-    */
 
     if(strlen(buffer_request) - 1 != 6){
         printf("Error: '%s' invalid plid\n", buffer_request);
@@ -69,6 +62,5 @@ char* parse_msg_start(int * arr_let_err){
     static char resp[20];
     strcpy(resp, "RSG OK ");
     sprintf(&resp[strlen(resp)], "%d %d\n", arr_let_err[0], arr_let_err[1]);
-    printf("%s\n", resp);
     return resp;
 }

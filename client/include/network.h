@@ -22,5 +22,6 @@ extern gs_net_info gs_ip_port;
 
 int set_ips(int argc, char * argv[]);
 char * send_msg_udp(void *buffer_msg, size_t len_msg);
+void send_msg_tcp(void *buffer_msg, size_t len_msg);
 
 #endif
