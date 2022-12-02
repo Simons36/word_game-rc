@@ -29,13 +29,13 @@ int set_ips(int argc, char* argv[]){
     return 0;
 }
 
-void send_msg_udp(void *buffer_msg, size_t len_msg){
+char* send_msg_udp(void *buffer_msg, size_t len_msg){
     int fd,errcode;
     ssize_t n;
     socklen_t addrlen;
     struct addrinfo hints,*res;
     struct sockaddr_in addr;
-    char buffer[128];
+    static char buffer[128];
 
     fd=socket(AF_INET,SOCK_DGRAM,0); //UDP socket
     if(fd==-1) exit(1); //error
@@ -67,7 +67,10 @@ void send_msg_udp(void *buffer_msg, size_t len_msg){
         printf("con: received: %zd\n", n);
         printf("con: msg: %s", buffer);
     }
-        
+    
     freeaddrinfo(res);
     close(fd);
+
+    return &buffer[0];
 }
+

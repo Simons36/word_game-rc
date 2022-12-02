@@ -14,6 +14,7 @@ char * process_request(char * buffer_request){
             return "RSG NOK\n";
         }
         return parse_msg_start(r);
+
     }/*else if{
 
     }*/

@@ -3,10 +3,13 @@
 
 #include "server.h"
 
+#include <time.h>
+
 #define MAX_PLAYERS 100
 #define MAX_ERRORS_6_CHAR 7
 #define MAX_ERRORS_7_10_CHAR 8
 #define MAX_ERRORS_MORE_10 9
+#define N_WORDS 2
 
 typedef struct client_info{
     int plid;
