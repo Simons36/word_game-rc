@@ -13,7 +13,9 @@ int check_player(int plid){
     return FALSE;
 }
 
-char* put_player(int plid){
+int* put_player(int plid){
+    static int ret[2];
+
     if(check_player(plid)){
         printf("Player already has an ongoing game in the server\n");
         return NULL;
@@ -21,11 +23,20 @@ char* put_player(int plid){
 
     for(int i = 0; i < MAX_PLAYERS; i++){
         if(sess_info[i] == NULL){
+            int len_word;
+
             sess_info[i] = malloc(sizeof(struct client_info));
             sess_info[i]->plid = plid;
             sess_info[i]->guesses = 0;
             sess_info[i]->word_to_guess = pick_word_from_file(i);
-            return sess_info[i]->word_to_guess;
+
+            len_word = (int) strlen(sess_info[i]->word_to_guess);
+            ret[0] = len_word;
+
+            sess_info[i]->max_errors = get_guesses_max(len_word);
+            ret[1] = sess_info[i]->max_errors;
+            printf("debug: %d\n", ret[0]);
+            return ret;
         }
     }
 
@@ -57,4 +68,14 @@ char *pick_word_from_file(int n_line){
     }
 
     return word;
+}
+
+int get_guesses_max(int len){
+    if(len <= 6){
+        return MAX_ERRORS_6_CHAR;
+    }else if(len < 10){
+        return MAX_ERRORS_7_10_CHAR;
+    }else{
+        return MAX_ERRORS_MORE_10;
+    }
 }

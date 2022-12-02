@@ -8,6 +8,7 @@
 
 char * process_request(char * buffer_request);
 int start_func(char * buffer_request);
-int start_input_correct(char *input, char **resp);
+int start_input_correct(char *input, int **resp);
+char *parse_msg_start(int * arr_let_err);
 
 #endif
