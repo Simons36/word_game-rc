@@ -46,6 +46,7 @@ int* put_player(int plid){
 }
 
 char *pick_word_from_file(int n_line){
+    srand(time(NULL));
     FILE * ptr;
     char *word = (char*)malloc(sizeof(char) * 30);
 
@@ -56,10 +57,12 @@ char *pick_word_from_file(int n_line){
         return NULL;
     }
 
-    for(int i = 0; i < n_line; i++){
-        if(fgets(NULL, 128, ptr) != NULL){// to ignore warning
-            return NULL;
-        }
+    int r = rand();
+
+    r = r % N_WORDS;
+
+    for(int i = 0; i < r; i++){
+        fscanf(ptr, "%*[^\n]\n"); //skip line
     }
 
     if(fscanf(ptr, "%s", word) != 1){

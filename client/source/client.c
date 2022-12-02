@@ -3,7 +3,7 @@
 #include "../include/commands.h"
 
 int main(int argc, char *argv[]){
-    char command[3];
+    char command[6];
     char plid[6];
 
 
