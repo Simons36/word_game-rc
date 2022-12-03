@@ -65,8 +65,10 @@ void udp_connection(){
         
         response = process_request(buffer);
 
+    
         n=sendto(fd,response,strlen(response) + 1,0,
             (struct sockaddr*)&addr,addrlen);
+
         if(n==-1)/*error*/exit(1);
     }
     freeaddrinfo(res);
@@ -107,7 +109,9 @@ void tcp_connection(){
         n=read(newfd,buffer,128);
         if(n==-1)/*error*/exit(1);
 
-        write(1,"received: ",10);write(1,buffer,n);
+        n = write(1,"received: ",10); if (n==-1) exit(1);
+        n = write(1,buffer,n); if (n==-1) exit(1);
+
         n=write(newfd,buffer,n);
 
         if(n==-1)/*error*/exit(1);

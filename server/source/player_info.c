@@ -66,7 +66,7 @@ char *pick_word_from_file(int n_line){
     r = r % N_WORDS;
 
     for(int i = 0; i < r; i++){
-        fscanf(ptr, "%*[^\n]\n"); //skip line
+        if(fscanf(ptr, "%*[^\n]\n") != 0) return NULL; //skip line
     }
 
     if(fscanf(ptr, "%s", word) != 1){

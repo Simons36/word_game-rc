@@ -14,7 +14,15 @@ int set_ips(int argc, char* argv[]){
         if(!strcmp(argv[i], "-n")){
             gs_ip_port.gsip = argv[i+1];
         }else if(!strcmp(argv[i], "-p")){
-            gs_ip_port.gsport = argv[i+1];
+            int temp = 0;
+            sscanf(argv[i+1], "%d", &temp);
+
+            if(temp > PORT_MIN && temp < PORT_MAX)
+                gs_ip_port.gsport = argv[i+1];
+            else{
+                printf("Invalid port: %s\n", argv[i+1]);
+                return EXIT_FAILURE;
+            }
         }else{
             printf("Invalid argument: %s\n", argv[i]);
             return EXIT_FAILURE;
@@ -45,7 +53,12 @@ char* send_msg_udp(void *buffer_msg, size_t len_msg){
     hints.ai_family = AF_INET; //IPv4
     hints.ai_socktype = SOCK_DGRAM; //UDP socket
 
-    /*setsockopt(fd, IPPROTO_UDP, SO_RCVTIMEO, )*/
+    struct timeval time_wait_response;
+    time_wait_response.tv_sec = TIME_WAIT_RESPONSE;
+    time_wait_response.tv_usec = 0;
+
+
+    setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, (void*)&(time_wait_response), sizeof(struct timeval));
 
 
     errcode = getaddrinfo(gs_ip_port.gsip, gs_ip_port.gsport, &hints,&res);
@@ -101,8 +114,9 @@ void send_msg_tcp(void *buffer_msg, size_t len_msg){
     n=read(fd,buffer,128);
     if(n==-1)/*error*/exit(1);
 
-    write(1,"echo: ",6); 
-    write(1,buffer,n);
+    n = write(1,"echo: ",6); if(n == -1) exit(1);
+
+    n = write(1,buffer,n); if(n == -1) exit(1);
 
     freeaddrinfo(res);
     close(fd);
