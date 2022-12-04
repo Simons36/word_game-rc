@@ -9,6 +9,7 @@ void create_game_data(int n_letters, int max_errors){
         game_info->letters_guessed[i] = ' ';
     }
     set_game_data(n_letters, max_errors);
+    game_info->n_trials = 0;
 }
 
 void set_game_data(int n_letters, int max_errors){
@@ -35,4 +36,12 @@ void print_word(){
         }
     }
     printf("\n");
+}
+
+int get_trials(){
+    return game_info->n_trials;
+}
+
+void increment_trials(){
+    game_info->n_trials++;
 }

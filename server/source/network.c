@@ -49,19 +49,19 @@ void udp_connection(){
 
     while (1){
         char *response;
+        ssize_t k;
 
         addrlen=sizeof(addr);
         n=recvfrom(fd,buffer,128,0,
             (struct sockaddr*)&addr,&addrlen);
         if(n==-1)/*error*/exit(1);
 
-        /*
+        
         k = write(1,"received: ",10);
         if(k != 10) exit(1);
 
         k = write(1,buffer,n);
         if(k != n) exit(1);
-        */
         
         response = process_request(buffer);
 

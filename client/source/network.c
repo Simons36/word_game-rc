@@ -58,25 +58,41 @@ char* send_msg_udp(void *buffer_msg, size_t len_msg){
     time_wait_response.tv_usec = 0;
 
 
-    setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, (void*)&(time_wait_response), sizeof(struct timeval));
+    setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, (void*)&(time_wait_response), sizeof(struct timeval)); /*waits for response 5 seconds*/
 
 
     errcode = getaddrinfo(gs_ip_port.gsip, gs_ip_port.gsport, &hints,&res);
-    if(errcode!=0) exit(1); //error
+    if(errcode!=0){
+        printf("Invalid ip: could not connect to server;");
+        exit(1); //error
+    } 
+    /*
+    */
 
-    n = sendto(fd, buffer_msg, len_msg, 0, res->ai_addr, res->ai_addrlen);
-    if(n==-1) exit(1); //error
+    for(int i = 0; i < 3; i++){/*if server doesn´t respond try to send message three times*/
+        n = sendto(fd, buffer_msg, len_msg, 0, res->ai_addr, res->ai_addrlen);
+        if(n==-1) exit(1); //error
 
-    if(DEV_MODE){
-        printf("con: sent: %zd\n", n);   
+        if(DEV_MODE){
+            printf("con: sent: %zd\n", n);   
+        }
+
+
+        addrlen = sizeof(addr);
+        n = recvfrom(fd,buffer,BUFFER_SIZE,0,
+            (struct sockaddr*)&addr,&addrlen);
+
+        if(n != -1){
+            break;
+        }else if(i == 2){
+            printf("Error: server doesn't respond or message lost\n");
+            exit(1);
+        }else{
+            printf("Server didn't respond: retrying to send messsage\n");
+        }
+
     }
 
-
-    addrlen = sizeof(addr);
-    n = recvfrom(fd,buffer,BUFFER_SIZE,0,
-        (struct sockaddr*)&addr,&addrlen);
-
-    if(n==-1) exit(1); //error
 
     if(DEV_MODE){
         printf("con: received: %zd\n", n);

@@ -4,8 +4,7 @@
 
 int main(int argc, char *argv[]){
     char command[6];
-    char plid[6];
-
+    char plid[6] = "";
 
     if(set_ips(argc, argv) != 0) return EXIT_FAILURE;
 
@@ -14,8 +13,27 @@ int main(int argc, char *argv[]){
         
 
         if(!strcmp(command, START_COM) || !strcmp(command, START_COM_SHORT)){
-            if(scanf("%s", plid) != 1) return EXIT_FAILURE;
-            start_command(plid);
+
+            if(!strcmp(plid, "")){
+                if(scanf("%s", plid) != 1) return EXIT_FAILURE;
+                if(start_command(plid) == EXIT_FAILURE) strcpy(plid, "");
+            }else{
+                printf("Client already has game started, with player id: %s\n", plid);
+                ignore_line(); /*ignore rest of line*/
+            }
+
+        }else if(!strcmp(command, PLAY_COM) || !strcmp(command, PLAY_COM_SHORT)){
+            if(!strcmp(plid, "")){
+                printf("Error: game has not been started\n");
+                ignore_line();
+            }else{
+                char letter[2];
+
+                scanf("%s", letter);
+                play_command(plid, letter);
+            }
+
+
         }else if(!strcmp(command, EXIT_COM)){
             break;
         }

@@ -8,6 +8,9 @@
 #define START_COM "start"
 #define START_COM_SHORT "sg"
 
+#define PLAY_COM "play"
+#define PLAY_COM_SHORT "pl"
+
 #define EXIT_COM "exit"
 
 #endif

@@ -51,10 +51,11 @@ int* put_player(int plid){
 
 char *pick_word_from_file(int n_line){
     srand(time(NULL));
-    FILE * ptr;
+    FILE * ptr, *ptrcpy;
     char *word = (char*)malloc(sizeof(char) * 30);
 
     ptr = fopen("server/source/words/words.txt", "r");
+    ptrcpy = fopen("server/source/words/words.txt", "r");
 
     if(ptr == NULL){
         printf("Word file could not be opened\n");
@@ -62,8 +63,8 @@ char *pick_word_from_file(int n_line){
     }
 
     int r = rand();
-
-    r = r % N_WORDS;
+    
+    r = r % get_n_words(ptrcpy);
 
     for(int i = 0; i < r; i++){
         if(fscanf(ptr, "%*[^\n]\n") != 0) return NULL; //skip line
@@ -85,4 +86,17 @@ int get_guesses_max(int len){
     }else{
         return MAX_ERRORS_MORE_10;
     }
+}
+
+int get_n_words(FILE *ptr){
+    int lines = 0;
+    char ch;
+
+    while(!feof(ptr)){
+        ch = fgetc(ptr);
+        if(ch == '\n'){
+            lines++;
+        }
+    }
+    return ++lines;
 }
