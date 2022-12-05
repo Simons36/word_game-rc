@@ -22,22 +22,18 @@ int main(int argc, char *argv[]){
                 ignore_line(); /*ignore rest of line*/
             }
 
-        }else if(!strcmp(command, PLAY_COM) || !strcmp(command, PLAY_COM_SHORT)){
-            if(!strcmp(plid, "")){
-                printf("Error: game has not been started\n");
-                ignore_line();
-            }else{
-                char letter[2];
+        }else if((!strcmp(command, PLAY_COM) || !strcmp(command, PLAY_COM_SHORT)) && plid_exists(plid)){
+            char letter[2];
 
-                scanf("%s", letter);
-                play_command(plid, letter);
-            }
-
+            scanf("%s", letter);
+            play_command(plid, letter);
 
         }else if(!strcmp(command, EXIT_COM)){
             break;
+        }else{
+            printf("Invalid command: %s\n", command);
+            ignore_line();
         }
     }
     return 0;
 }
-

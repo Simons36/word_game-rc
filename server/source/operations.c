@@ -15,9 +15,13 @@ char * process_request(char * buffer_request){
         }
         return parse_msg_start(r);
 
-    }/*else if{
+    }else if(!strcmp(command, PLAY_OP_CODE)){
+        if(!play_input_correct(buffer_request)){
+            return NULL;
+        }
+    }//else if{
 
-    }*/
+    //}
     return NULL;
 }
 
@@ -37,21 +41,16 @@ int start_func(char * buffer_request){
     }
 
 
-    for(int i = 0; i < strlen(plid); i++){
-        if(plid[i] < '0' || plid[i] > '9'){
-            printf("Error: invalid plid\n");
-            return EXIT_FAILURE;
-        }else{
-            plid_ret = plid_ret*10 + (plid[i] - '0');
-        }
-    }
+    if((plid_ret = plid_valid(plid)) == FALSE) return EXIT_FAILURE; /*if player id is not valid
+                                                                    then return failure; else
+                                                                     convert plid to int in plid ret*/
 
     return plid_ret;
 }
 
 int start_input_correct(char *input, int **r){
     int plid;
-    if(input[3] != ' ' || (plid = start_func(&input[4])) == EXIT_FAILURE || (*r = put_player(plid)) == NULL){
+    if(input[strlen(START_OP_CODE)] != ' ' || (plid = start_func(&input[strlen(START_OP_CODE) + 1])) == EXIT_FAILURE || (*r = put_player(plid)) == NULL){
         return FALSE;
     }
     return TRUE;
@@ -63,4 +62,33 @@ char* parse_msg_start(int * arr_let_err){
     strcpy(resp, "RSG OK ");
     sprintf(&resp[strlen(resp)], "%d %d\n", arr_let_err[0], arr_let_err[1]);
     return resp;
+}
+
+int play_input_correct(char *input){
+    /*
+    int plid;
+    if(input[strlen(PLAY_OP_CODE)] == ' '){
+        if()
+    }
+    */
+
+
+    return TRUE;
+}
+
+int play_func(char * input){
+    
+}
+
+int plid_valid(char * plid){
+    int plid_ret = 0;
+    for(int i = 0; i < strlen(plid); i++){
+        if(plid[i] < '0' || plid[i] > '9'){
+            printf("Error: invalid plid\n");
+            return FALSE;
+        }else{
+            plid_ret = plid_ret*10 + (plid[i] - '0');
+        }
+    }
+    return plid_ret;
 }

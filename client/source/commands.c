@@ -79,3 +79,13 @@ void play_command(char * plid, char *letter){
 void ignore_line(){
     for(char c = ' '; c != '\n';c = getchar());
 }
+
+int plid_exists(char *plid){
+    if(!strcmp(plid, "")){
+        printf("Error: game has not been started\n");
+        ignore_line();
+        return FALSE;
+    }else{
+        return TRUE;
+    }
+}
