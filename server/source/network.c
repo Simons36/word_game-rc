@@ -29,7 +29,6 @@ void udp_connection(){
     socklen_t addrlen;
     struct addrinfo hints,*res;
     struct sockaddr_in addr;
-    char buffer[128];
 
     /*create the socket*/
     fd=socket(AF_INET,SOCK_DGRAM,0); //UDP socket
@@ -50,6 +49,7 @@ void udp_connection(){
     while (1){
         char *response;
         ssize_t k;
+        char *buffer = (char*)malloc(sizeof(char)*128);   
 
         addrlen=sizeof(addr);
         n=recvfrom(fd,buffer,128,0,
@@ -70,6 +70,7 @@ void udp_connection(){
             (struct sockaddr*)&addr,addrlen);
 
         if(n==-1)/*error*/exit(1);
+        free(buffer);
     }
     freeaddrinfo(res);
     close(fd);

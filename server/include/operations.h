@@ -15,5 +15,7 @@ int start_input_correct(char *input, int **resp);
 char *parse_msg_start(int * arr_let_err);
 int play_input_correct(char *input);
 int plid_valid(char * plid);
+int play_func(char * input);
+char valid_letter(char letter)
 
 #endif

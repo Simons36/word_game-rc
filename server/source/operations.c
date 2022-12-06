@@ -7,6 +7,8 @@ char * process_request(char * buffer_request){
 
     strncpy(command, buffer_request, 3);
 
+    printf("%zd\n", strlen(buffer_request));
+
     if(!strcmp(command, START_OP_CODE)){
         int *r = (int*)malloc(sizeof(int)*2);
 
@@ -65,23 +67,44 @@ char* parse_msg_start(int * arr_let_err){
 }
 
 int play_input_correct(char *input){
-    /*
     int plid;
-    if(input[strlen(PLAY_OP_CODE)] == ' '){
-        if()
-    }
-    */
+    char temp[128];
+    char letter;
+    size_t count;
 
+    if(input[strlen(PLAY_OP_CODE)] != ' ')  return FALSE;
+    
+    sscanf(&input[strlen(PLAY_OP_CODE) + 1], "%s", temp);
+
+    if((plid = plid_valid(temp)) == FALSE || !check_player(plid)) return FALSE;
+    
+    if(input[strlen(PLAY_OP_CODE) + 1 + strlen(temp)] != ' ') return FALSE;
+
+    if(!(letter = valid_letter(input[strlen(PLAY_OP_CODE) + 1 + strlen(temp) + 1]))) return FALSE;
+
+    if(input[strlen(PLAY_OP_CODE) + 1 + strlen(temp) + 2] != ' ') return FALSE;
+
+    char trial = input[strlen(PLAY_OP_CODE) + 1 + strlen(temp) + 3];
+
+    if(trial <= '0' || trial >= '9') return FALSE;
+
+    if(input[strlen(PLAY_OP_CODE) + 1 + strlen(temp) + 4] != '\n') return FALSE;
 
     return TRUE;
+
 }
 
 int play_func(char * input){
-    
+    return 0;
 }
 
 int plid_valid(char * plid){
     int plid_ret = 0;
+
+    if(strlen(plid) != 6){
+        return FALSE;
+    }
+    
     for(int i = 0; i < strlen(plid); i++){
         if(plid[i] < '0' || plid[i] > '9'){
             printf("Error: invalid plid\n");
@@ -91,4 +114,16 @@ int plid_valid(char * plid){
         }
     }
     return plid_ret;
+}
+
+char valid_letter(char letter){
+    if(letter >= 'a' && letter <= 'z'){
+        return letter;
+    }
+
+    if(letter >= 'A' && letter <= 'Z'){
+        return letter - 32;
+    }
+
+    return FALSE;
 }
