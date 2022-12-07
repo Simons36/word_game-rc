@@ -9,17 +9,21 @@ char * process_request(char * buffer_request){
 
     printf("%zd\n", strlen(buffer_request));
 
+    char *resp = (char*)malloc(sizeof(char) * 128);
+
     if(!strcmp(command, START_OP_CODE)){
         int *r = (int*)malloc(sizeof(int)*2);
 
         if(!start_input_correct(buffer_request, &r)){
             return "RSG NOK\n";
+        }else{
+            return parse_msg_start(r);
         }
-        return parse_msg_start(r);
 
     }else if(!strcmp(command, PLAY_OP_CODE)){
-        if(play_input_correct(buffer_request)){
-            return play_func(&buffer_request[strlen(PLAY_OP_CODE)]);
+        strcpy(resp, play_func(buffer_request));
+        if(resp == NULL){
+            return resp;
         }else{
             return "RLG ERR\n";
         }
@@ -68,51 +72,51 @@ char* parse_msg_start(int * arr_let_err){
     return resp;
 }
 
-int play_input_correct(char *input){
+char* play_func(char *input){
     int plid;
     char temp[128];
     char letter;
     size_t count = strlen(PLAY_OP_CODE);
 
-    if(input[count] != ' ')  return FALSE;
+    if(input[count] != ' ')  return NULL;
     
     count += 1;
     sscanf(&input[count], "%s", temp);
 
-    if((plid = plid_valid(temp)) == FALSE || !check_player(plid)) return FALSE;
+    if((plid = plid_valid(temp)) == FALSE || !check_player(plid)) return NULL;
     
     count += strlen(temp);
-    if(input[count] != ' ') return FALSE;
+    if(input[count] != ' ') return NULL;
 
     count += 1;
-    if(!(letter = valid_letter(input[count]))) return FALSE;
+    if(!(letter = valid_letter(input[count]))) return NULL;
 
     
     count += 1;
-    if(input[count] != ' ') return FALSE;
+    if(input[count] != ' ') return NULL;
 
     count += 1;
     char trial = input[count];
 
-    if(trial < '0' || trial > '9') return FALSE;
+    if(trial < '0' || trial > '9') return NULL;
 
     count += 1;
-    if(input[count] != '\n') return FALSE;
+    if(input[count] != '\n') return NULL;
 
-    return TRUE;
+    return play_func_aux(plid, letter, trial - '0');
 
 }
 
-char* play_func(char * input){
-    int plid;
-    char letter, trial;
+char* play_func_aux(int plid, char letter, int trial){
     char resp[128];
-    
-    sscanf(input, "%d %c %c", &plid, &letter, &trial);
 
-    
+    if(put_letter(plid, letter, trial) == EXIT_FAILURE){
+        return "RLG DUP";
+    }
+
+    printf("%c\n", letter);
  
-    return 0;
+    return "yeet";
 }
 
 int plid_valid(char * plid){
@@ -139,7 +143,7 @@ char valid_letter(char letter){
     }
 
     if(letter >= 'A' && letter <= 'Z'){
-        return letter - 32;
+        return letter + 32;
     }
 
     return FALSE;

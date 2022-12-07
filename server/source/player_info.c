@@ -36,7 +36,10 @@ int* put_player(int plid){
             sess_info[i]->max_errors = get_guesses_max(len_word);
             ret[1] = sess_info[i]->max_errors;
 
-            sess_info[i]->letters_guessed = (char*)malloc(sizeof(char) * 26); //26 letters in the alphabet
+            sess_info[i]->letters_guessed = (int*)malloc(sizeof(int) * 26); //26 letters in the alphabet
+            for(int k = 0; k < 26; k++){
+                sess_info[i]->letters_guessed = FALSE;
+            }
 
             if(verbose_flag){
                 printf("PLID=%d: new game; word = \"%s\" (%d letters)\n", plid, sess_info[i]->word_to_guess, len_word);
@@ -103,9 +106,19 @@ int get_n_words(FILE *ptr){
     return ++lines;
 }
 
-int put_letter(int plid, char letter){
+int play_letter(int plid, char letter, int trial){
     sessions pl = get_player(plid);
+    if(pl->letters_guessed[letter - 97] == TRUE){
+        return RETURN_PLAY_DUP;
+    }else if(pl->guesses >= pl->max_errors){
+        return RETURN_PLAY_OVR;
+    }else if(pl->guesses != trial - 1){
+        return RETURN_PLAY_INV;
+    }
+
+    pl->letters_guessed[letter - 97] = TRUE;
     
+
 }
 
 sessions get_player(int plid){
