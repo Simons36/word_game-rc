@@ -18,8 +18,10 @@ char * process_request(char * buffer_request){
         return parse_msg_start(r);
 
     }else if(!strcmp(command, PLAY_OP_CODE)){
-        if(!play_input_correct(buffer_request)){
-            return NULL;
+        if(play_input_correct(buffer_request)){
+            return play_func(&buffer_request[strlen(PLAY_OP_CODE)]);
+        }else{
+            return "RLG ERR\n";
         }
     }//else if{
 
@@ -70,31 +72,46 @@ int play_input_correct(char *input){
     int plid;
     char temp[128];
     char letter;
-    size_t count;
+    size_t count = strlen(PLAY_OP_CODE);
 
-    if(input[strlen(PLAY_OP_CODE)] != ' ')  return FALSE;
+    if(input[count] != ' ')  return FALSE;
     
-    sscanf(&input[strlen(PLAY_OP_CODE) + 1], "%s", temp);
+    count += 1;
+    sscanf(&input[count], "%s", temp);
 
     if((plid = plid_valid(temp)) == FALSE || !check_player(plid)) return FALSE;
     
-    if(input[strlen(PLAY_OP_CODE) + 1 + strlen(temp)] != ' ') return FALSE;
+    count += strlen(temp);
+    if(input[count] != ' ') return FALSE;
 
-    if(!(letter = valid_letter(input[strlen(PLAY_OP_CODE) + 1 + strlen(temp) + 1]))) return FALSE;
+    count += 1;
+    if(!(letter = valid_letter(input[count]))) return FALSE;
 
-    if(input[strlen(PLAY_OP_CODE) + 1 + strlen(temp) + 2] != ' ') return FALSE;
+    
+    count += 1;
+    if(input[count] != ' ') return FALSE;
 
-    char trial = input[strlen(PLAY_OP_CODE) + 1 + strlen(temp) + 3];
+    count += 1;
+    char trial = input[count];
 
-    if(trial <= '0' || trial >= '9') return FALSE;
+    if(trial < '0' || trial > '9') return FALSE;
 
-    if(input[strlen(PLAY_OP_CODE) + 1 + strlen(temp) + 4] != '\n') return FALSE;
+    count += 1;
+    if(input[count] != '\n') return FALSE;
 
     return TRUE;
 
 }
 
-int play_func(char * input){
+char* play_func(char * input){
+    int plid;
+    char letter, trial;
+    char resp[128];
+    
+    sscanf(input, "%d %c %c", &plid, &letter, &trial);
+
+    
+ 
     return 0;
 }
 

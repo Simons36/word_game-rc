@@ -16,6 +16,7 @@ typedef struct client_info{
     char *word_to_guess;
     int guesses;
     int max_errors;
+    char *letters_guessed;
 }*sessions;
 
 
