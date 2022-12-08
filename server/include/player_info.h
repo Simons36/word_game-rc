@@ -14,6 +14,12 @@
 #define RETURN_PLAY_DUP 1
 #define RETURN_PLAY_OVR 2
 #define RETURN_PLAY_INV 3
+#define RETURN_PLAY_WIN 4
+#define RETURN_PLAY_OK 5
+#define RETURN_PLAY_NOK 6
+
+#define GUESSED 1
+#define NOT_GUESSED 0
 
 typedef struct client_info{
     int plid;
@@ -21,7 +27,13 @@ typedef struct client_info{
     int guesses;
     int max_errors;
     int *letters_guessed;
+    int *letters_left;
 }*sessions;
+
+typedef struct letter_guessed_pos{
+    int num;
+    int pos[30];
+}*letter_n_pos;
 
 
 int check_player(int plid);
@@ -29,7 +41,7 @@ int* put_player(int plid);
 char *pick_word_from_file(int n_line);
 int get_guesses_max(int len);
 int get_n_words(FILE *ptr);
-int play_letter(int plid, char letter, int trial);
+int play_letter(int plid, char letter, int trial, int* n_pos);
 sessions get_player(int plid);
 
 #endif

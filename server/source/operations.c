@@ -103,19 +103,26 @@ char* play_func(char *input){
     count += 1;
     if(input[count] != '\n') return NULL;
 
+    count += 1;
+    if(input[count] != '\0') return NULL;
+
     return play_func_aux(plid, letter, trial - '0');
 
 }
 
 char* play_func_aux(int plid, char letter, int trial){
     char resp[128];
+    int *n_pos = (int*)calloc(1, sizeof(int));
 
-    if(put_letter(plid, letter, trial) == EXIT_FAILURE){
-        return "RLG DUP";
+    /*
+    if(play_letter(plid, letter, trial, n_pos) == RET){
+    return "RLG DUP";
     }
+    */
+    play_letter(plid, letter, trial, n_pos);
+    printf("%d\n", n_pos[0]);
 
-    printf("%c\n", letter);
- 
+
     return "yeet";
 }
 

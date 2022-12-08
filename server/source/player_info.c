@@ -41,6 +41,11 @@ int* put_player(int plid){
                 sess_info[i]->letters_guessed = FALSE;
             }
 
+            sess_info[i]->letters_left = (int*)calloc(strlen(sess_info[i]->word_to_guess), sizeof(int));
+            for(int k = 0; k < strlen(sess_info[i]->word_to_guess); k++){
+                sess_info[i]->letters_left[k] = NOT_GUESSED;
+            }
+
             if(verbose_flag){
                 printf("PLID=%d: new game; word = \"%s\" (%d letters)\n", plid, sess_info[i]->word_to_guess, len_word);
             }
@@ -106,24 +111,52 @@ int get_n_words(FILE *ptr){
     return ++lines;
 }
 
-int play_letter(int plid, char letter, int trial){
+int play_letter(int plid, char letter, int trial_numb, int* n_pos){
     sessions pl = get_player(plid);
+    printf("debug: %d\n", pl->plid);
+
+
     if(pl->letters_guessed[letter - 97] == TRUE){
         return RETURN_PLAY_DUP;
     }else if(pl->guesses >= pl->max_errors){
         return RETURN_PLAY_OVR;
-    }else if(pl->guesses != trial - 1){
+    }else if(pl->guesses != trial_numb - 1){
         return RETURN_PLAY_INV;
     }
 
     pl->letters_guessed[letter - 97] = TRUE;
+    pl->guesses++;
+
+    int n = 0;
+    int is_all_guessed = TRUE;
+    int correct_guess = FALSE;
     
+    for(int i = 0; i < strlen(pl->word_to_guess); i++){
+        if(pl->word_to_guess[i] == letter){
+            n++;
+            n_pos = (int*)realloc(n_pos, sizeof(int)*n);
+            n_pos[n - 1] = i;
+            pl->letters_left[i] = GUESSED;
+            correct_guess = TRUE;
+        }else if(pl->letters_left[i] == NOT_GUESSED){
+            is_all_guessed = FALSE;
+        }
+    }
+
+    if(is_all_guessed){
+        return RETURN_PLAY_WIN;
+    }else if(correct_guess){
+        return RETURN_PLAY_OK;
+    }else{
+        return RETURN_PLAY_NOK;
+    }
 
 }
 
 sessions get_player(int plid){
     for(int i = 0; i < MAX_PLAYERS; i++){
         if(sess_info[i]->plid == plid){
+            printf("wfefwe: %d\n", *sess_info[i]->letters_guessed);
             return sess_info[i];
         }
     }
