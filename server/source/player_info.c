@@ -139,23 +139,15 @@ int play_letter(int plid, char letter, int trial_numb, int** n_pos){
     for(int i = 0; i < strlen(sess_info[k]->word_to_guess); i++){
         if(sess_info[k]->word_to_guess[i] == letter){
             n++;
-            printf("%d\n", n);
-            if(n != 1){
-                n_pos = realloc(n_pos, n - 1);
-            }
             n_pos[n - 1] = (int*)malloc(sizeof(int));
             *n_pos[n - 1] = i;
+            n_pos[n] = NULL;
             sess_info[k]->letters_left[i] = GUESSED;
             correct_guess = TRUE;
         }else if(sess_info[k]->letters_left[i] == NOT_GUESSED){
             is_all_guessed = FALSE;
         }
     }
-    if(n_pos[4] == NULL){
-        printf("hhhhhh\n");
-    }
-    printf("hmm: %d\n", *n_pos[0]);
-
 
     if(is_all_guessed){
         return RETURN_PLAY_WIN;

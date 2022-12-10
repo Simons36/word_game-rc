@@ -20,7 +20,7 @@ char * process_request(char * buffer_request){
 
     }else if(!strcmp(command, PLAY_OP_CODE)){
         strcpy(resp, play_func(buffer_request));
-        if(resp == NULL){
+        if(resp != NULL){
             return resp;
         }else{
             return "RLG ERR\n";
@@ -109,23 +109,24 @@ char* play_func(char *input){
 }
 
 char* play_func_aux(int plid, char letter, int trial){
-    char resp[128];
+    //char resp[128];
     int **n_pos = calloc(1, sizeof(int*));
+    int return_num = play_letter(plid, letter, trial, n_pos);
 
-    /*
-    if(play_letter(plid, letter, trial, n_pos) == RET){
-    return "RLG DUP";
+    if(return_num == RETURN_PLAY_DUP){
+        return "RLG DUP\n";
+    }else if(return_num == RETURN_PLAY_OVR){
+        return "RLG OVR\n";
+    }else if(return_num == RETURN_PLAY_INV){
+        return "RLG INV\n";
+    }else if(return_num == RETURN_PLAY_WIN){
+        return "RLG WIN\n";
+    }else if(return_num == RETURN_PLAY_NOK){
+        return "RLG NOK\n";
+    }else{
+        return parse_msg_play(n_pos);
     }
-    */
-    printf("return: %d\n", play_letter(plid, letter, trial, n_pos));
-    printf("vector: %d\n", *n_pos[0]);
-    for(int i = 0;*(n_pos + i) != NULL ;i++){
-        printf("%d\n", i);
-        printf("%d\n",*n_pos[i]);
-    }
 
-
-    return "yeet";
 }
 
 int plid_valid(char * plid){
@@ -156,4 +157,25 @@ char valid_letter(char letter){
     }
 
     return FALSE;
+}
+
+char* parse_msg_play(int **n_pos){
+    static char resp[128];
+    strcpy(resp, "RLG OK ");
+    int len = get_len_n_pos(n_pos);
+    sprintf(&resp[strlen(resp)], "%d ", len);
+    for(int i = 0; i < len; i++){
+        sprintf(&resp[strlen(resp)], "%d ", *n_pos[i]);
+    }
+    strcpy(&resp[strlen(resp)], "\n");
+    printf("%s", resp);
+    return resp;
+}
+
+int get_len_n_pos(int ** n_pos){
+    int len = 0;
+    for(int i = 0; n_pos[i] != NULL; i++){
+        len++;
+    }
+    return len;
 }

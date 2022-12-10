@@ -25,7 +25,7 @@ int main(int argc, char *argv[]){
         }else if((!strcmp(command, PLAY_COM) || !strcmp(command, PLAY_COM_SHORT)) && plid_exists(plid)){
             char letter[2];
 
-            scanf("%s", letter);
+            if(scanf("%s", letter) != 1) return EXIT_FAILURE;
             play_command(plid, letter);
 
         }else if(!strcmp(command, EXIT_COM)){
