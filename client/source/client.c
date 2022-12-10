@@ -18,15 +18,20 @@ int main(int argc, char *argv[]){
                 if(scanf("%s", plid) != 1) return EXIT_FAILURE;
                 if(start_command(plid) == EXIT_FAILURE) strcpy(plid, "");
             }else{
-                printf("Client already has game started, with player id: %s\n", plid);
-                ignore_line(); /*ignore rest of line*/
+                printf("Game has already been started, with player id: %s\n", plid);
             }
+            ignore_line(); /*ignore rest of line*/
 
-        }else if((!strcmp(command, PLAY_COM) || !strcmp(command, PLAY_COM_SHORT)) && plid_exists(plid)){
-            char letter[2];
+        }else if((!strcmp(command, PLAY_COM) || !strcmp(command, PLAY_COM_SHORT))){
+            if(plid_exists(plid)){
+                char letter[2];
 
-            if(scanf("%s", letter) != 1) return EXIT_FAILURE;
-            play_command(plid, letter);
+                if(scanf("%s", letter) != 1) return EXIT_FAILURE;
+                play_command(plid, letter);
+            }else{
+                printf("Error: game hasn't been started yet\n");
+            }
+            ignore_line();
 
         }else if(!strcmp(command, EXIT_COM)){
             break;

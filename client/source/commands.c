@@ -43,7 +43,7 @@ int start_command(char* plid){
             printf("New game started (max %d errors):", max_errors);
             print_word();
         }
-    }
+    }/*if return from server is wrong*/
 
     return EXIT_SUCCESS;
 }
@@ -74,6 +74,12 @@ void play_command(char * plid, char *letter){
     msg_len = parse_msg(plg_msg, msg, 4);
 
     strcpy(resp, send_msg_udp(msg, msg_len));
+
+    free(plg_msg[0]);
+    free(plg_msg[1]);
+    free(plg_msg[2]);
+    free(plg_msg[3]);
+    free(msg);
 }
 
 void ignore_line(){
