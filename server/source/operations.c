@@ -7,8 +7,6 @@ char * process_request(char * buffer_request){
 
     strncpy(command, buffer_request, 3);
 
-    printf("%zd\n", strlen(buffer_request));
-
     char *resp = (char*)malloc(sizeof(char) * 128);
 
     if(!strcmp(command, START_OP_CODE)){
@@ -112,15 +110,19 @@ char* play_func(char *input){
 
 char* play_func_aux(int plid, char letter, int trial){
     char resp[128];
-    int *n_pos = (int*)calloc(1, sizeof(int));
+    int **n_pos = calloc(1, sizeof(int*));
 
     /*
     if(play_letter(plid, letter, trial, n_pos) == RET){
     return "RLG DUP";
     }
     */
-    play_letter(plid, letter, trial, n_pos);
-    printf("%d\n", n_pos[0]);
+    printf("return: %d\n", play_letter(plid, letter, trial, n_pos));
+    printf("vector: %d\n", *n_pos[0]);
+    for(int i = 0;*(n_pos + i) != NULL ;i++){
+        printf("%d\n", i);
+        printf("%d\n",*n_pos[i]);
+    }
 
 
     return "yeet";

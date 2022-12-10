@@ -36,9 +36,10 @@ int* put_player(int plid){
             sess_info[i]->max_errors = get_guesses_max(len_word);
             ret[1] = sess_info[i]->max_errors;
 
-            sess_info[i]->letters_guessed = (int*)malloc(sizeof(int) * 26); //26 letters in the alphabet
-            for(int k = 0; k < 26; k++){
-                sess_info[i]->letters_guessed = FALSE;
+            //sess_info[i]->letters_guessed = (int *)malloc(sizeof(int) * 26); // 26 letters in the alphabet
+            for (int k = 0; k < 26; k++)
+            {
+                sess_info[i]->letters_guessed[k] = FALSE;
             }
 
             sess_info[i]->letters_left = (int*)calloc(strlen(sess_info[i]->word_to_guess), sizeof(int));
@@ -111,37 +112,50 @@ int get_n_words(FILE *ptr){
     return ++lines;
 }
 
-int play_letter(int plid, char letter, int trial_numb, int* n_pos){
-    sessions pl = get_player(plid);
-    printf("debug: %d\n", pl->plid);
+int play_letter(int plid, char letter, int trial_numb, int** n_pos){
+    int k = -1;
+    for(int i = 0; i < MAX_PLAYERS; i++){
+        if(sess_info[i]->plid == plid){
+            k = i;
+            break;
+        }
+    }
 
-
-    if(pl->letters_guessed[letter - 97] == TRUE){
-        return RETURN_PLAY_DUP;
-    }else if(pl->guesses >= pl->max_errors){
+    if(sess_info[k]->guesses >= sess_info[k]->max_errors){
         return RETURN_PLAY_OVR;
-    }else if(pl->guesses != trial_numb - 1){
+    }else if(sess_info[k]->letters_guessed[letter - 97] == TRUE){
+        return RETURN_PLAY_DUP;
+    }else if(sess_info[k]->guesses != trial_numb){
         return RETURN_PLAY_INV;
     }
 
-    pl->letters_guessed[letter - 97] = TRUE;
-    pl->guesses++;
+    sess_info[k]->letters_guessed[letter - 97] = TRUE;
+    sess_info[k]->guesses++;
 
     int n = 0;
     int is_all_guessed = TRUE;
     int correct_guess = FALSE;
     
-    for(int i = 0; i < strlen(pl->word_to_guess); i++){
-        if(pl->word_to_guess[i] == letter){
+    for(int i = 0; i < strlen(sess_info[k]->word_to_guess); i++){
+        if(sess_info[k]->word_to_guess[i] == letter){
             n++;
-            n_pos = (int*)realloc(n_pos, sizeof(int)*n);
-            n_pos[n - 1] = i;
-            pl->letters_left[i] = GUESSED;
+            printf("%d\n", n);
+            if(n != 1){
+                n_pos = realloc(n_pos, n - 1);
+            }
+            n_pos[n - 1] = (int*)malloc(sizeof(int));
+            *n_pos[n - 1] = i;
+            sess_info[k]->letters_left[i] = GUESSED;
             correct_guess = TRUE;
-        }else if(pl->letters_left[i] == NOT_GUESSED){
+        }else if(sess_info[k]->letters_left[i] == NOT_GUESSED){
             is_all_guessed = FALSE;
         }
     }
+    if(n_pos[4] == NULL){
+        printf("hhhhhh\n");
+    }
+    printf("hmm: %d\n", *n_pos[0]);
+
 
     if(is_all_guessed){
         return RETURN_PLAY_WIN;
@@ -156,8 +170,16 @@ int play_letter(int plid, char letter, int trial_numb, int* n_pos){
 sessions get_player(int plid){
     for(int i = 0; i < MAX_PLAYERS; i++){
         if(sess_info[i]->plid == plid){
-            printf("wfefwe: %d\n", *sess_info[i]->letters_guessed);
             return sess_info[i];
+        }
+    }
+    return NULL;
+}
+
+char *get_word(int plid){
+    for(int i = 0; i < MAX_PLAYERS; i++){
+        if(sess_info[i]->plid == plid){
+            return sess_info[i]->word_to_guess;
         }
     }
     return NULL;

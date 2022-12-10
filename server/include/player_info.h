@@ -26,7 +26,7 @@ typedef struct client_info{
     char *word_to_guess;
     int guesses;
     int max_errors;
-    int *letters_guessed;
+    int letters_guessed[26];
     int *letters_left;
 }*sessions;
 
@@ -41,7 +41,8 @@ int* put_player(int plid);
 char *pick_word_from_file(int n_line);
 int get_guesses_max(int len);
 int get_n_words(FILE *ptr);
-int play_letter(int plid, char letter, int trial, int* n_pos);
+int play_letter(int plid, char letter, int trial, int** n_pos);
 sessions get_player(int plid);
+char *get_word(int plid);
 
 #endif
