@@ -56,6 +56,7 @@ void play_command(char * plid, char *letter){
     char trials_str[2];
 
     char resp[128];
+    char temp[4];
 
     plg_msg[0] = (char*)malloc(strlen(PLAY_MSG) + 1);
     strcpy(plg_msg[0], PLAY_MSG);
@@ -80,6 +81,22 @@ void play_command(char * plid, char *letter){
     free(plg_msg[2]);
     free(plg_msg[3]);
     free(msg);
+
+    if(sscanf(resp, "%s", temp) != 1) exit(1);
+
+    if(!strcmp(temp, PLAY_MSG)){
+        if(sscanf(&resp[strlen(PLAY_MSG)], "%s", temp) != 1) exit(1);
+
+        if(!strcmp(temp, "DUP")){
+            printf("Error: this letter was already sent in a previous trial\n");
+        }else if (!strcmp(temp, "NOK")){
+            printf("This letter is not part of the word\n");
+        }else if(!strcmp(temp, "OVR")){
+            printf("Game over: the number of maximum errors (%d) has already been reached\n", get_max_errors());
+        }else if(!strcmp(temp, "INV")){
+            printf("");
+        }
+    }
 }
 
 void ignore_line(){

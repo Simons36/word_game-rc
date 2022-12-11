@@ -7,6 +7,7 @@
 #define START_MSG_RESP "RSG"
 
 #define PLAY_MSG "PLG"
+#define PLAY_MSG_RESP "RLG"
 
 int start_command(char* plid);
 void play_command(char * plid, char *letter);
