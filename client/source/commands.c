@@ -89,12 +89,16 @@ void play_command(char * plid, char *letter){
 
         if(!strcmp(temp, "DUP")){
             printf("Error: this letter was already sent in a previous trial\n");
-        }else if (!strcmp(temp, "NOK")){
+        }else if(!strcmp(temp, "NOK")){
             printf("This letter is not part of the word\n");
         }else if(!strcmp(temp, "OVR")){
             printf("Game over: the number of maximum errors (%d) has already been reached\n", get_max_errors());
         }else if(!strcmp(temp, "INV")){
-            printf("");
+            printf("Invalid play command: the trial number, %d, was not the number expected\n", get_trials());
+        }else if(!strcmp(temp, "ERR")){
+            printf("Error play command: invalid PLID, or there is no ongoing game for this PLID\n");
+        }else if(!strcmp(temp, "OK")){
+            play_place_letter(letter[0]);
         }
     }
 }
@@ -111,4 +115,8 @@ int plid_exists(char *plid){
     }else{
         return TRUE;
     }
+}
+
+void play_place_letter(char letter){
+
 }

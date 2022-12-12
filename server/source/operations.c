@@ -124,7 +124,7 @@ char* play_func_aux(int plid, char letter, int trial){
     }else if(return_num == RETURN_PLAY_NOK){
         return "RLG NOK\n";
     }else{
-        return parse_msg_play(n_pos);
+        return parse_msg_play(n_pos, trial);
     }
 
 }
@@ -159,9 +159,12 @@ char valid_letter(char letter){
     return FALSE;
 }
 
-char* parse_msg_play(int **n_pos){
+char* parse_msg_play(int **n_pos, int trial){
     static char resp[128];
     strcpy(resp, "RLG OK ");
+
+    sprintf(&resp[strlen(resp)], "%d ", trial);
+
     int len = get_len_n_pos(n_pos);
     sprintf(&resp[strlen(resp)], "%d ", len);
     for(int i = 0; i < len; i++){

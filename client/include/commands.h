@@ -12,7 +12,7 @@
 int start_command(char* plid);
 void play_command(char * plid, char *letter);
 int plid_exists(char * plid);
-
+void play_place_letter(char letter);
 void ignore_line();
 
 #endif
