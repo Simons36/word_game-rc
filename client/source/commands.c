@@ -82,10 +82,24 @@ void play_command(char * plid, char *letter){
     free(plg_msg[3]);
     free(msg);
 
+
+
     if(sscanf(resp, "%s", temp) != 1) exit(1);
 
-    if(!strcmp(temp, PLAY_MSG)){
-        if(sscanf(&resp[strlen(PLAY_MSG)], "%s", temp) != 1) exit(1);
+    if(!strcmp(temp, PLAY_MSG_RESP)){
+        int trial = 5;
+
+        if(sscanf(&resp[strlen(PLAY_MSG_RESP)], "%s", temp) != 1) exit(1);
+
+        sscanf(&resp[strlen(PLAY_MSG_RESP) + strlen(temp) + 1], "%d", &trial); // checks trial number sent by server, +1 for whitespace
+
+        printf("%s\n", &resp[strlen(PLAY_MSG_RESP) + strlen(temp) + 1]);
+
+        if(trial != get_trials()){
+            printf("Error: trial number of server and client don't match\n"); //should never happen, TODO: ask teacher
+            return;
+        }
+find a file
 
         if(!strcmp(temp, "DUP")){
             printf("Error: this letter was already sent in a previous trial\n");
@@ -100,6 +114,9 @@ void play_command(char * plid, char *letter){
         }else if(!strcmp(temp, "OK")){
             play_place_letter(letter[0]);
         }
+
+         
+
     }
 }
 
