@@ -10,6 +10,7 @@ void create_game_data(int n_letters, int max_errors){
     }
     set_game_data(n_letters, max_errors);
     game_info->n_trials = 0;
+    game_info->n_errors = 0;
 }
 
 void set_game_data(int n_letters, int max_errors){
@@ -31,8 +32,11 @@ char get_letter_by_pos(int pos){
 
 void print_word(){
     for(int i = 0; i < get_n_letters(); i++){
-        if(get_letter_by_pos(i) == ' '){
+        char letter;
+        if((letter = get_letter_by_pos(i)) == ' '){
             printf(" _");
+        }else{
+            printf(" %c", letter);
         }
     }
     printf("\n");
@@ -44,4 +48,16 @@ int get_trials(){
 
 void increment_trials(){
     game_info->n_trials++;
+}
+
+void set_letter_by_pos(char letter, int pos){
+    game_info->letters_guessed[pos] = letter;
+}
+
+int get_errors(){
+    return game_info->n_errors;
+}
+
+void increment_errors(){
+    game_info->n_errors++;
 }

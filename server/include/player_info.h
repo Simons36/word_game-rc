@@ -28,6 +28,7 @@ typedef struct client_info{
     int max_errors;
     int letters_guessed[26];
     int *letters_left;
+    int errors;
 }*sessions;
 
 typedef struct letter_guessed_pos{

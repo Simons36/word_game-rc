@@ -91,15 +91,12 @@ void play_command(char * plid, char *letter){
 
         if(sscanf(&resp[strlen(PLAY_MSG_RESP)], "%s", temp) != 1) exit(1);
 
-        sscanf(&resp[strlen(PLAY_MSG_RESP) + strlen(temp) + 1], "%d", &trial); // checks trial number sent by server, +1 for whitespace
-
-        printf("%s\n", &resp[strlen(PLAY_MSG_RESP) + strlen(temp) + 1]);
+        sscanf(&resp[strlen(PLAY_MSG_RESP) + strlen(temp) + 2], "%d", &trial); // checks trial number sent by server, +2 for whitespaces
 
         if(trial != get_trials()){
             printf("Error: trial number of server and client don't match\n"); //should never happen, TODO: ask teacher
             return;
         }
-find a file
 
         if(!strcmp(temp, "DUP")){
             printf("Error: this letter was already sent in a previous trial\n");
@@ -112,10 +109,8 @@ find a file
         }else if(!strcmp(temp, "ERR")){
             printf("Error play command: invalid PLID, or there is no ongoing game for this PLID\n");
         }else if(!strcmp(temp, "OK")){
-            play_place_letter(letter[0]);
+            play_place_letter(letter[0], &resp[strlen(PLAY_MSG_RESP) + strlen(temp) + 4]);
         }
-
-         
 
     }
 }
@@ -134,6 +129,19 @@ int plid_exists(char *plid){
     }
 }
 
-void play_place_letter(char letter){
+void play_place_letter(char letter, char* n_pos){
+    int num_times = 0;
 
+    if(sscanf(n_pos, "%d", &num_times) != 1) exit(1); //numbers to read
+
+    int numbs_read = 1;
+
+    for(int i = 0; i < num_times; i++){
+        int pos = 0;
+        if(sscanf(&n_pos[2 * numbs_read], "%d", &pos) != 1) exit(1);
+
+        set_letter_by_pos(letter, pos);
+
+        increment_trials();
+    }
 }

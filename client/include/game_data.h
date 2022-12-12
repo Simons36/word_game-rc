@@ -8,6 +8,7 @@ typedef struct gamedata{
     int max_errors;
     char *letters_guessed;
     int n_trials;
+    int n_errors;
 }*game_data;
 
 void create_game_data(int n_letters, int max_errors);
@@ -18,5 +19,23 @@ char get_letter_by_pos(int pos);
 void print_word();
 void increment_trials();
 int get_trials();
+
+/**
+ * @brief This function
+ * sets in the game info struct (string letters_guessed)
+ * the letter in the position pos
+ */
+void set_letter_by_pos(char letter, int pos);
+
+/**
+ * @brief Returns the number of errors in the current session
+ */
+int get_errors();
+
+/**
+ * @brief Increases the number of errors by one
+ * 
+ */
+void increment_errors();
 
 #endif
