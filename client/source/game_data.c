@@ -31,6 +31,7 @@ char get_letter_by_pos(int pos){
 }
 
 void print_word(){
+    printf("Word:");
     for(int i = 0; i < get_n_letters(); i++){
         char letter;
         if((letter = get_letter_by_pos(i)) == ' '){
@@ -60,4 +61,12 @@ int get_errors(){
 
 void increment_errors(){
     game_info->n_errors++;
+}
+
+void complete_word(char letter){
+    for(int i = 0; i < strlen(game_info->letters_guessed); i++){
+        if(game_info->letters_guessed[i] == ' '){
+            game_info->letters_guessed[i] = letter;
+        }
+    }
 }

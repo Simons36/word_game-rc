@@ -122,7 +122,9 @@ int play_letter(int plid, char letter, int trial_numb, int** n_pos){
         }
     }
 
-    if(sess_info[k]->guesses >= sess_info[k]->max_errors){
+    printf("trials client: %d\ntrials server: %d\n", trial_numb, sess_info[k]->guesses);
+
+    if(sess_info[k]->errors >= sess_info[k]->max_errors){
         return RETURN_PLAY_OVR;
     }else if(sess_info[k]->letters_guessed[letter - 97] == TRUE){
         return RETURN_PLAY_DUP;
@@ -155,6 +157,7 @@ int play_letter(int plid, char letter, int trial_numb, int** n_pos){
     }else if(correct_guess){
         return RETURN_PLAY_OK;
     }else{
+        sess_info[k]->errors++;
         return RETURN_PLAY_NOK;
     }
 

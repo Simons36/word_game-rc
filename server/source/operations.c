@@ -94,9 +94,10 @@ char* play_func(char *input){
     if(input[count] != ' ') return NULL;
 
     count += 1;
-    char trial = input[count];
+    int trial = 0;
+    if(sscanf(&input[count], "%d", &trial) != 1) return NULL;
 
-    if(trial < '0' || trial > '9') return NULL;
+    if(trial < 0) return NULL;
 
     count += 1;
     if(input[count] != '\n') return NULL;
@@ -104,7 +105,7 @@ char* play_func(char *input){
     count += 1;
     if(input[count] != '\0') return NULL;
 
-    return play_func_aux(plid, letter, trial - '0');
+    return play_func_aux(plid, letter, trial);
 
 }
 
