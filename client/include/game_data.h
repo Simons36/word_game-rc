@@ -38,4 +38,9 @@ int get_errors();
  */
 void increment_errors();
 
+/**
+ * @brief Complete all remaining spots with letter
+ */
+void complete_word(char letter);
+
 #endif
