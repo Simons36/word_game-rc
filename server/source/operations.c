@@ -110,7 +110,6 @@ char* play_func(char *input){
 }
 
 char* play_func_aux(int plid, char letter, int trial){
-    //char resp[128];
     int **n_pos = calloc(1, sizeof(int*));
     int return_num = play_letter(plid, letter, trial, n_pos);
 
@@ -172,7 +171,6 @@ char* parse_msg_play(int **n_pos, int trial){
         sprintf(&resp[strlen(resp)], "%d ", *n_pos[i]);
     }
     strcpy(&resp[strlen(resp)], "\n");
-    printf("%s", resp);
     return resp;
 }
 

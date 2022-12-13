@@ -121,8 +121,7 @@ int play_letter(int plid, char letter, int trial_numb, int** n_pos){
             break;
         }
     }
-
-    printf("trials client: %d\ntrials server: %d\n", trial_numb, sess_info[k]->guesses);
+    
 
     if(sess_info[k]->errors >= sess_info[k]->max_errors){
         return RETURN_PLAY_OVR;

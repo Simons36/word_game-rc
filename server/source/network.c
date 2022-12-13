@@ -48,7 +48,7 @@ void udp_connection(){
 
     while (1){
         char *response;
-        ssize_t k;
+        //ssize_t k;
         char *buffer = (char*)malloc(sizeof(char)*128);   
 
         addrlen=sizeof(addr);
@@ -56,12 +56,13 @@ void udp_connection(){
             (struct sockaddr*)&addr,&addrlen);
         if(n==-1)/*error*/exit(1);
 
-        
+        /*
         k = write(1,"received: ",10);
         if(k != 10) exit(1);
 
         k = write(1,buffer,n);
         if(k != n) exit(1);
+        */
         
         response = process_request(buffer);
 

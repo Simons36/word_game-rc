@@ -40,7 +40,10 @@ void print_word(){
             printf(" %c", letter);
         }
     }
-    printf("\n");
+    
+    printf("   Lives remaining: %d\n", get_max_errors() - get_errors()); 
+    /*a "life" is how may errors u can make 
+    before the game ends (max errors - current errors)*/                                                    
 }
 
 int get_trials(){
