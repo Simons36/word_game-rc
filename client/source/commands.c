@@ -32,7 +32,7 @@ int start_command(char* plid){
         if(sscanf(&resp[4], "%s", temp) != 1) exit(1);
         
         if(!strcmp(temp, "NOK")){
-            printf("Error connecting to the server: there is already a game with this plid or invalid plid\n");
+            printf("Error connecting to the server: there is already a game with this plid\n");
             return EXIT_FAILURE;
         }
 
@@ -43,7 +43,10 @@ int start_command(char* plid){
             printf("New game started (max %d errors):\n", max_errors);
             print_word();
         }
-    }/*if return from server is wrong*/
+    }else if(!strcmp(temp, "ERR")){
+        printf("Error: Invalid plid\n");
+        return EXIT_FAILURE;
+    }
 
     return EXIT_SUCCESS;
 }
@@ -52,8 +55,7 @@ void play_command(char * plid, char *letter){
     char **plg_msg = calloc(4, sizeof(char*));
     void *msg = malloc(2);
     size_t msg_len;
-    int n_trials = get_trials();
-    char trials_str[2];
+    char trials_str[12];
 
     char resp[128];
     char temp[4];
@@ -68,8 +70,7 @@ void play_command(char * plid, char *letter){
     strcpy(plg_msg[2], letter);
 
     plg_msg[3] = (char*)malloc(sizeof(char) + 1);
-    trials_str[0] = n_trials + '0';
-    trials_str[1] = '\0';
+    sprintf(trials_str, "%d", get_trials() + 1);
     strcpy(plg_msg[3], trials_str);
 
     msg_len = parse_msg(plg_msg, msg, 4);
@@ -96,7 +97,7 @@ void play_command(char * plid, char *letter){
         }else if(!strcmp(temp, "OVR")){
             printf("Game over: the number of maximum errors (%d) has already been reached\n", get_max_errors());
         }else if(!strcmp(temp, "INV")){
-            printf("Invalid play command: the trial number, %d, was not the number expected\n", get_trials());
+            printf("Invalid play command: the trial number, %d, was not the number expected\n", get_trials() + 1);
         }else if(!strcmp(temp, "ERR")){
             printf("Error play command: invalid PLID, or there is no ongoing game for this PLID\n");
         }else{
@@ -111,7 +112,7 @@ void play_command(char * plid, char *letter){
             
             if(!strcmp(temp, "OK")){
                 sscanf(&resp[strlen(PLAY_MSG_RESP) + strlen(temp) + 2], "%d", &trial); // checks trial number sent by server, +2 for whitespaces
-                if(trial != (get_trials() - 1)){
+                if(trial != (get_trials())){
                     printf("Error: trial number of server and client don't match\n"); //should never happen, TODO: ask teacher
                     return;
                 }
@@ -120,6 +121,7 @@ void play_command(char * plid, char *letter){
             }
 
         }
+        print_word();
     }
 }
 
@@ -152,17 +154,14 @@ void play_place_letter(char letter, char* n_pos){
         numbs_read++;
         set_letter_by_pos(letter, pos);
     }
-    print_word();
 }
 
 void play_wrong_letter(char letter){
     increment_errors();
     printf("Letter %c doesn't belong to the word\n", letter);
-    print_word();
 }
 
 void play_win(char letter){
     complete_word(letter);
-    print_word();
     printf("Congratulations! You have guessed the word and won the game\n");
 }

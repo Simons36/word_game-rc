@@ -11,8 +11,13 @@ char * process_request(char * buffer_request){
 
     if(!strcmp(command, START_OP_CODE)){
         int *r = (int*)malloc(sizeof(int)*2);
+        int plid;
 
-        if(!start_input_correct(buffer_request, &r)){
+        if((plid = start_func(&buffer_request[strlen(START_OP_CODE) + 1])) == EXIT_FAILURE){
+            return MSG_ERROR;
+        }
+
+        if(!start_input_correct(buffer_request, &r, plid)){
             return "RSG NOK\n";
         }else{
             return parse_msg_start(r);
@@ -50,13 +55,11 @@ int start_func(char * buffer_request){
     if((plid_ret = plid_valid(plid)) == FALSE) return EXIT_FAILURE; /*if player id is not valid
                                                                     then return failure; else
                                                                      convert plid to int in plid ret*/
-
     return plid_ret;
 }
 
-int start_input_correct(char *input, int **r){
-    int plid;
-    if(input[strlen(START_OP_CODE)] != ' ' || (plid = start_func(&input[strlen(START_OP_CODE) + 1])) == EXIT_FAILURE || (*r = put_player(plid)) == NULL){
+int start_input_correct(char *input, int **r, int plid){
+    if(input[strlen(START_OP_CODE)] != ' ' || (*r = put_player(plid)) == NULL){
         return FALSE;
     }
     return TRUE;

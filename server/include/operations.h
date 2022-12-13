@@ -3,6 +3,8 @@
 
 #include "server.h"
 
+#define MSG_ERROR "ERR\n"
+
 #define START_OP_CODE "SNG"
 #define START_RESP_OP_CODE "RSG"
 
@@ -11,7 +13,7 @@
 
 char * process_request(char * buffer_request);
 int start_func(char * buffer_request);
-int start_input_correct(char *input, int **resp);
+int start_input_correct(char *input, int **resp, int plid);
 char *parse_msg_start(int * arr_let_err);
 int play_input_correct(char *input);
 int plid_valid(char * plid);

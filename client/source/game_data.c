@@ -41,7 +41,7 @@ void print_word(){
         }
     }
     
-    printf("   Lives remaining: %d\n", get_max_errors() - get_errors()); 
+    printf("   Lives remaining: %d\n", get_max_errors() - get_errors() + 1); 
     /*a "life" is how may errors u can make 
     before the game ends (max errors - current errors)*/                                                    
 }

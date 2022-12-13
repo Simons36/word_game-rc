@@ -70,6 +70,8 @@ char* send_msg_udp(void *buffer_msg, size_t len_msg){
     */
 
     for(int i = 0; i < 3; i++){/*if server doesn´t respond try to send message three times*/
+
+        printf("debug %s\n", (char*)buffer_msg);
         n = sendto(fd, buffer_msg, len_msg, 0, res->ai_addr, res->ai_addrlen);
         if(n==-1) exit(1); //error
 
