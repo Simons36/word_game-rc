@@ -61,6 +61,17 @@ int* put_player(int plid){
 
 }
 
+int remove_player(int plid){
+    for(int i = 0; i < MAX_PLAYERS; i++){
+        if(sess_info[i]->plid == plid){
+            free(sess_info[i]->letters_left);
+            free(sess_info[i]);
+            return EXIT_SUCCESS;
+        }
+    }
+    return EXIT_FAILURE;
+}
+
 char *pick_word_from_file(int n_line){
     srand(time(NULL));
     FILE * ptr, *ptrcpy;
@@ -174,6 +185,7 @@ int play_letter(int plid, char letter, int trial_numb, int** n_pos){
             if(verbose_flag){
                 printf("; game already over, max errors(%d) was reached\n", sess_info[k]->max_errors);
             }
+            //if(remove_player(plid) == EXIT_FAILURE) exit(-1);
             return RETURN_PLAY_OVR;
         }
 

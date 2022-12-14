@@ -73,3 +73,8 @@ void complete_word(char letter){
         }
     }
 }
+
+void clear_game(){
+    free(game_info->letters_guessed);
+    free(game_info);
+}

@@ -33,6 +33,7 @@ char * process_request(char * buffer_request){
     }//else if{
 
     //}
+    free(resp);
     return NULL;
 }
 
@@ -102,11 +103,12 @@ char* play_func(char *input){
 
     if(trial < 0) return NULL;
 
-    count += 1;
+    (trial < 10) ? (count += 1) : (count += 2);
     if(input[count] != '\n') return NULL;
 
     count += 1;
     if(input[count] != '\0') return NULL;
+
 
     return play_func_aux(plid, letter, trial);
 
@@ -116,19 +118,29 @@ char* play_func_aux(int plid, char letter, int trial){
     int **n_pos = calloc(1, sizeof(int*));
     int return_num = play_letter(plid, letter, trial, n_pos);
 
+    static char str_return[30];
+    strcpy(str_return, "RLG ");
+
+    char trial_str[13];
+    sprintf(trial_str, "%d\n", trial);
+
     if(return_num == RETURN_PLAY_DUP){
-        return "RLG DUP\n";
+        strcpy(&str_return[strlen(str_return)], "DUP ");
     }else if(return_num == RETURN_PLAY_OVR){
-        return "RLG OVR\n";
+        strcpy(&str_return[strlen(str_return)], "OVR ");
     }else if(return_num == RETURN_PLAY_INV){
-        return "RLG INV\n";
+        strcpy(&str_return[strlen(str_return)], "INV ");
     }else if(return_num == RETURN_PLAY_WIN){
-        return "RLG WIN\n";
+        strcpy(&str_return[strlen(str_return)], "WIN ");
     }else if(return_num == RETURN_PLAY_NOK){
-        return "RLG NOK\n";
+        strcpy(&str_return[strlen(str_return)], "NOK ");
     }else{
-        return parse_msg_play(n_pos, trial);
+        return parse_msg_play_ok(n_pos, trial);
     }
+
+    strcpy(&str_return[strlen(str_return)], trial_str);
+    printf("%s", str_return);
+    return str_return;
 
 }
 
@@ -162,7 +174,7 @@ char valid_letter(char letter){
     return FALSE;
 }
 
-char* parse_msg_play(int **n_pos, int trial){
+char* parse_msg_play_ok(int **n_pos, int trial){
     static char resp[128];
     strcpy(resp, "RLG OK ");
 

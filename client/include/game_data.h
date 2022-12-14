@@ -43,4 +43,11 @@ void increment_errors();
  */
 void complete_word(char letter);
 
+/**
+ * @brief Resets the game info stored in the client,
+ * used when server communicates to the client 
+ * that the game is over
+ */
+void clear_game();
+
 #endif

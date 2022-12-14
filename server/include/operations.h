@@ -20,7 +20,7 @@ int plid_valid(char * plid);
 char* play_func(char * input);
 char * play_func_aux(int plid, char letter, int trial);
 char valid_letter(char letter);
-char* parse_msg_play(int **n_pos, int trial);
+char* parse_msg_play_ok(int **n_pos, int trial);
 int get_len_n_pos(int ** n_pos);
 
 #endif

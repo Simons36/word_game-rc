@@ -27,9 +27,9 @@ int main(int argc, char *argv[]){
                 char letter[2];
 
                 if(scanf("%s", letter) != 1) return EXIT_FAILURE;
-                play_command(plid, letter);
+                if(play_command(plid, letter) == 1) strcpy(plid, "");
             }else{
-                printf("Error: game hasn't been started yet\n");
+                printf("Error: there is no ongoing game\n");
             }
             ignore_line();
 

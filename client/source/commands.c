@@ -51,7 +51,7 @@ int start_command(char* plid){
     return EXIT_SUCCESS;
 }
 
-void play_command(char * plid, char *letter){
+int play_command(char * plid, char *letter){
     char **plg_msg = calloc(4, sizeof(char*));
     void *msg = malloc(2);
     size_t msg_len;
@@ -92,39 +92,45 @@ void play_command(char * plid, char *letter){
 
         if(sscanf(&resp[strlen(PLAY_MSG_RESP)], "%s", temp) != 1) exit(1);
 
+        sscanf(&resp[strlen(PLAY_MSG_RESP) + strlen(temp) + 2], "%d", &trial); // checks trial number sent by server, +2 for whitespaces
+        if(trial != (get_trials() + 1)){
+            printf("Error: trial number of server and client don't match\n"); //should never happen, TODO: ask teacher
+            return -1;
+        }
+
         if(!strcmp(temp, "DUP")){
             printf("Error: this letter was already sent in a previous trial\n");
         }else if(!strcmp(temp, "OVR")){
             increment_errors();
             printf("Game over: the number of maximum errors (%d) has been reached\n", get_max_errors());
+            clear_game();
+            return 1; //to signal to client main function that game is over, to clear plid
         }else if(!strcmp(temp, "INV")){
             printf("Invalid play command: the trial number, %d, was not the number expected\n", get_trials() + 1);
         }else if(!strcmp(temp, "ERR")){
             printf("Error play command: invalid PLID, or there is no ongoing game for this PLID\n");
         }else{
 
-            increment_trials();
+            increment_trials();//valid trial, so increment
 
             if(!strcmp(temp, "WIN")){
                 play_win(letter[0]);
-                return;
+                return 0;
             }else if(!strcmp(temp, "NOK")){
                 play_wrong_letter(letter[0]);
             }
             
             if(!strcmp(temp, "OK")){
-                sscanf(&resp[strlen(PLAY_MSG_RESP) + strlen(temp) + 2], "%d", &trial); // checks trial number sent by server, +2 for whitespaces
-
-                if(trial != (get_trials())){
-                    printf("Error: trial number of server and client don't match\n"); //should never happen, TODO: ask teacher
-                    return;
-                }
 
                 play_place_letter(letter[0], &resp[strlen(PLAY_MSG_RESP) + strlen(temp) + 4]);
             }
 
         }
         print_word();
+        return 0;
+    }else{
+        //TODO: implement when server response is wrong
+        return -1;
     }
 }
 
@@ -134,7 +140,6 @@ void ignore_line(){
 
 int plid_exists(char *plid){
     if(!strcmp(plid, "")){
-        printf("Error: game has not been started\n");
         ignore_line();
         return FALSE;
     }else{
