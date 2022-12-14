@@ -50,4 +50,9 @@ void complete_word(char letter);
  */
 void clear_game();
 
+/**
+ * Sets the number of trials to trial
+ */
+void set_trials(int trial);
+
 #endif

@@ -93,10 +93,7 @@ int play_command(char * plid, char *letter){
         if(sscanf(&resp[strlen(PLAY_MSG_RESP)], "%s", temp) != 1) exit(1);
 
         sscanf(&resp[strlen(PLAY_MSG_RESP) + strlen(temp) + 2], "%d", &trial); // checks trial number sent by server, +2 for whitespaces
-        if(trial != (get_trials() + 1)){
-            printf("Error: trial number of server and client don't match\n"); //should never happen, TODO: ask teacher
-            return -1;
-        }
+        set_trials(trial);
 
         if(!strcmp(temp, "DUP")){
             printf("Error: this letter was already sent in a previous trial\n");
@@ -110,8 +107,6 @@ int play_command(char * plid, char *letter){
         }else if(!strcmp(temp, "ERR")){
             printf("Error play command: invalid PLID, or there is no ongoing game for this PLID, or the syntax of the play command was incorrect\n");
         }else{
-
-            increment_trials();//valid trial, so increment
 
             if(!strcmp(temp, "WIN")){
                 play_win(letter[0]);
