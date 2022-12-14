@@ -35,7 +35,6 @@ char * process_request(char * buffer_request){
     }//else if{
 
     //}
-    free(resp);
     return NULL;
 }
 
