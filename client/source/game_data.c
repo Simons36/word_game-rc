@@ -78,3 +78,7 @@ void clear_game(){
     free(game_info->letters_guessed);
     free(game_info);
 }
+
+void set_trials(int trial){
+    game_info->n_trials = trial;
+}

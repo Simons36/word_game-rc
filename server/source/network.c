@@ -27,6 +27,7 @@ void udp_connection(){
     int fd,errcode;
     ssize_t n;
     socklen_t addrlen;
+    ssize_t k;
     struct addrinfo hints,*res;
     struct sockaddr_in addr;
 
@@ -48,21 +49,20 @@ void udp_connection(){
 
     while (1){
         char *response;
-        char *buffer = (char*)malloc(sizeof(char)*128);   
+        char *buffer = (char*)malloc(sizeof(char)*64);   
 
         addrlen=sizeof(addr);
         n=recvfrom(fd,buffer,128,0,
             (struct sockaddr*)&addr,&addrlen);
         if(n==-1)/*error*/exit(1);
 
-        /*
-        ssize_t k;
+        
         k = write(1,"received: ",10);
         if(k != 10) exit(1);
 
         k = write(1,buffer,n);
         if(k != n) exit(1);
-        */
+        
         
         response = process_request(buffer);
 
