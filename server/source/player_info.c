@@ -121,20 +121,27 @@ int play_letter(int plid, char letter, int trial_numb, int** n_pos){
             break;
         }
     }
-    
 
-    if(sess_info[k]->errors >= sess_info[k]->max_errors){
-        return RETURN_PLAY_OVR;
-    }else if(sess_info[k]->letters_guessed[letter - 97] == TRUE){
+    if(verbose_flag){
+        printf("PLID=%d: play letter \"%c\"", plid, letter);
+    }
+    
+    if(sess_info[k]->letters_guessed[letter - 97] == TRUE){
+        if(verbose_flag){
+            printf("; letter was already guessed in previous trial\n");
+        }
         return RETURN_PLAY_DUP;
-    }else if(sess_info[k]->guesses != trial_numb){
+    }else if(sess_info[k]->guesses + 1 != trial_numb){
+        if(verbose_flag){
+            printf("; trial number sent by client (%d) was not the one expected (%d)\n", sess_info[k]->guesses + 1, trial_numb);
+        }
         return RETURN_PLAY_INV;
     }
 
     sess_info[k]->letters_guessed[letter - 97] = TRUE;
     sess_info[k]->guesses++;
 
-    int n = 0;
+    int n = 0; //number of hits
     int is_all_guessed = TRUE;
     int correct_guess = FALSE;
     
@@ -152,11 +159,27 @@ int play_letter(int plid, char letter, int trial_numb, int** n_pos){
     }
 
     if(is_all_guessed){
+        if(verbose_flag){
+            printf(" - WIN (game ended)\n");
+        }
         return RETURN_PLAY_WIN;
     }else if(correct_guess){
+        if(verbose_flag){
+            printf(" - %d hits; word not guessed\n", n);
+        }
         return RETURN_PLAY_OK;
     }else{
         sess_info[k]->errors++;
+        if(sess_info[k]->errors > sess_info[k]->max_errors){
+            if(verbose_flag){
+                printf("; game already over, max errors(%d) was reached\n", sess_info[k]->max_errors);
+            }
+            return RETURN_PLAY_OVR;
+        }
+
+        if(verbose_flag){
+            printf(" - 0 hits\n");
+        }
         return RETURN_PLAY_NOK;
     }
 

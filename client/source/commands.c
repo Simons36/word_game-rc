@@ -95,7 +95,8 @@ void play_command(char * plid, char *letter){
         if(!strcmp(temp, "DUP")){
             printf("Error: this letter was already sent in a previous trial\n");
         }else if(!strcmp(temp, "OVR")){
-            printf("Game over: the number of maximum errors (%d) has already been reached\n", get_max_errors());
+            increment_errors();
+            printf("Game over: the number of maximum errors (%d) has been reached\n", get_max_errors());
         }else if(!strcmp(temp, "INV")){
             printf("Invalid play command: the trial number, %d, was not the number expected\n", get_trials() + 1);
         }else if(!strcmp(temp, "ERR")){
@@ -106,12 +107,14 @@ void play_command(char * plid, char *letter){
 
             if(!strcmp(temp, "WIN")){
                 play_win(letter[0]);
+                return;
             }else if(!strcmp(temp, "NOK")){
                 play_wrong_letter(letter[0]);
             }
             
             if(!strcmp(temp, "OK")){
                 sscanf(&resp[strlen(PLAY_MSG_RESP) + strlen(temp) + 2], "%d", &trial); // checks trial number sent by server, +2 for whitespaces
+
                 if(trial != (get_trials())){
                     printf("Error: trial number of server and client don't match\n"); //should never happen, TODO: ask teacher
                     return;
@@ -146,8 +149,6 @@ void play_place_letter(char letter, char* n_pos){
 
     int numbs_read = 1;
 
-    printf("%d\n", num_times);
-
     for(int i = 0; i < num_times; i++){
         int pos = 0;
         if(sscanf(&n_pos[2 * numbs_read], "%d", &pos) != 1) exit(1);
@@ -163,5 +164,6 @@ void play_wrong_letter(char letter){
 
 void play_win(char letter){
     complete_word(letter);
+    print_word();
     printf("Congratulations! You have guessed the word and won the game\n");
 }
