@@ -108,7 +108,7 @@ int play_command(char * plid, char *letter){
         }else if(!strcmp(temp, "INV")){
             printf("Invalid play command: the trial number, %d, was not the number expected\n", get_trials() + 1);
         }else if(!strcmp(temp, "ERR")){
-            printf("Error play command: invalid PLID, or there is no ongoing game for this PLID\n");
+            printf("Error play command: invalid PLID, or there is no ongoing game for this PLID, or the syntax of the play command was incorrect\n");
         }else{
 
             increment_trials();//valid trial, so increment

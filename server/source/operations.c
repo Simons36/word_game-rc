@@ -7,7 +7,7 @@ char * process_request(char * buffer_request){
 
     strncpy(command, buffer_request, 3);
 
-    char *resp = (char*)malloc(sizeof(char) * 128);
+    /*char *resp = (char*)malloc(sizeof(char) * 128);*/
 
     if(!strcmp(command, START_OP_CODE)){
         int *r = (int*)malloc(sizeof(int)*2);
@@ -24,12 +24,14 @@ char * process_request(char * buffer_request){
         }
 
     }else if(!strcmp(command, PLAY_OP_CODE)){
-        strcpy(resp, play_func(buffer_request));
-        if(resp != NULL){
+
+        return play_func(buffer_request);
+        /*strcpy(resp, play_func(buffer_request));
+        if(strcmp(resp, NULL) != 0){
             return resp;
         }else{
             return "RLG ERR\n";
-        }
+        }*/
     }//else if{
 
     //}
@@ -85,29 +87,28 @@ char* play_func(char *input){
     count += 1;
     sscanf(&input[count], "%s", temp);
 
-    if((plid = plid_valid(temp)) == FALSE || !check_player(plid)) return NULL;
+    if((plid = plid_valid(temp)) == FALSE || !check_player(plid)) return "RLG ERR\n";
     
     count += strlen(temp);
-    if(input[count] != ' ') return NULL;
+    if(input[count] != ' ') return "RLG ERR\n";
 
     count += 1;
-    if(!(letter = valid_letter(input[count]))) return NULL;
+    if(!(letter = valid_letter(input[count]))) return "RLG ERR\n";
 
-    
     count += 1;
-    if(input[count] != ' ') return NULL;
+    if(input[count] != ' ') return "RLG ERR\n";
 
     count += 1;
     int trial = 0;
-    if(sscanf(&input[count], "%d", &trial) != 1) return NULL;
+    if(sscanf(&input[count], "%d", &trial) != 1) return "RLG ERR\n";
 
-    if(trial < 0) return NULL;
+    if(trial < 0) return "RLG ERR\n";
 
     (trial < 10) ? (count += 1) : (count += 2);
-    if(input[count] != '\n') return NULL;
+    if(input[count] != '\n') return "RLG ERR\n";
 
     count += 1;
-    if(input[count] != '\0') return NULL;
+    if(input[count] != '\0') return "RLG ERR\n";
 
 
     return play_func_aux(plid, letter, trial);
