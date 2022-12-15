@@ -47,32 +47,29 @@ void udp_connection(){
     if(n==-1) /*error*/ exit(1);
 
     while (1){
-        char *response;
-        char *buffer = (char*)malloc(sizeof(char)*64);   
+        char buffer[60];   
+        char response[60];
 
         addrlen=sizeof(addr);
-        n=recvfrom(fd,buffer,64,0,
+        n=recvfrom(fd,buffer,60,0,
             (struct sockaddr*)&addr,&addrlen);
         if(n==-1)/*error*/exit(1);
 
-        /*
         ssize_t k;
         k = write(1,"received: ",10);
         if(k != 10) exit(1);
 
         k = write(1,buffer,n);
         if(k != n) exit(1);
-        */
         
-        
-        response = process_request(buffer);
+
+        strcpy(response, process_request(buffer));
 
     
         n=sendto(fd,response,strlen(response) + 1,0,
             (struct sockaddr*)&addr,addrlen);
 
         if(n==-1)/*error*/exit(1);
-        free(buffer);
     }
     freeaddrinfo(res);
     close(fd);

@@ -7,7 +7,7 @@ char * process_request(char * buffer_request){
 
     strncpy(command, buffer_request, 3);
 
-    //char *resp = (char*)malloc(sizeof(char) * 128);
+    printf("%s\n", command);
 
     if(!strcmp(command, START_OP_CODE)){
         int *r = (int*)malloc(sizeof(int)*2);
@@ -17,6 +17,7 @@ char * process_request(char * buffer_request){
         strcpy(buffer_request2, buffer_request);//to correct weird bug
 
         if((plid = start_func(&buffer_request[strlen(START_OP_CODE) + 1])) == EXIT_FAILURE){
+            printf("reiw\n");
             return MSG_ERROR;
         }
 
@@ -29,18 +30,9 @@ char * process_request(char * buffer_request){
     }else if(!strcmp(command, PLAY_OP_CODE)){
 
         return play_func(buffer_request);
-        /*strcpy(resp, play_func(buffer_request));
-        if(strcmp(resp, NULL) != 0){
-            return resp;
-        }else{
-            return "RLG ERR\n";
-        }*/
-    }//else if{
-
-    //}
-    else{
-        return MSG_ERROR;
+        
     }
+    return MSG_ERROR;
 }
 
 int start_func(char * buffer_request){
