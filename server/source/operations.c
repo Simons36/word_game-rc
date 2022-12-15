@@ -13,11 +13,14 @@ char * process_request(char * buffer_request){
         int *r = (int*)malloc(sizeof(int)*2);
         int plid;
 
+        char buffer_request2[32];
+        strcpy(buffer_request2, buffer_request);//to correct weird bug
+
         if((plid = start_func(&buffer_request[strlen(START_OP_CODE) + 1])) == EXIT_FAILURE){
             return MSG_ERROR;
         }
 
-        if(!start_input_correct(buffer_request, &r, plid)){
+        if(!start_input_correct(buffer_request2, &r, plid)){
             return "RSG NOK\n";
         }else{
             return parse_msg_start(r);
@@ -35,7 +38,9 @@ char * process_request(char * buffer_request){
     }//else if{
 
     //}
-    return NULL;
+    else{
+        return MSG_ERROR;
+    }
 }
 
 int start_func(char * buffer_request){
