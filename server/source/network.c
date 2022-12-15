@@ -52,7 +52,7 @@ void udp_connection(){
         char *buffer = (char*)malloc(sizeof(char)*64);   
 
         addrlen=sizeof(addr);
-        n=recvfrom(fd,buffer,128,0,
+        n=recvfrom(fd,buffer,64,0,
             (struct sockaddr*)&addr,&addrlen);
         if(n==-1)/*error*/exit(1);
 

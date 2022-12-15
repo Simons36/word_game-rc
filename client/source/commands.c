@@ -116,7 +116,6 @@ int play_command(char * plid, char *letter){
             }
             
             if(!strcmp(temp, "OK")){
-
                 play_place_letter(letter[0], &resp[strlen(PLAY_MSG_RESP) + strlen(temp) + 4]);
             }
 

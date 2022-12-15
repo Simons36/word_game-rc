@@ -214,3 +214,8 @@ char *get_word(int plid){
     }
     return NULL;
 }
+
+int get_current_guesses(int plid){
+    sessions sess = get_player(plid);
+    return sess->guesses;
+}

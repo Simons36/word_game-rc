@@ -13,13 +13,11 @@ char * process_request(char * buffer_request){
         int *r = (int*)malloc(sizeof(int)*2);
         int plid;
 
-        printf("debug1 %s\n", buffer_request);
         if((plid = start_func(&buffer_request[strlen(START_OP_CODE) + 1])) == EXIT_FAILURE){
             return MSG_ERROR;
         }
-        printf("debug2 %s\n", &buffer_request[0]);
+
         if(!start_input_correct(buffer_request, &r, plid)){
-            printf("IUBbfwn\n");
             return "RSG NOK\n";
         }else{
             return parse_msg_start(r);
@@ -64,12 +62,9 @@ int start_func(char * buffer_request){
 }
 
 int start_input_correct(char *input, int **r, int plid){
-    printf("%s\n", input);
     if(input[strlen(START_OP_CODE)] != ' '){
-        printf("BIfbwef\n");
         return FALSE;
     }else if((*r = put_player(plid)) == NULL){
-        printf("wwww\n");
         return FALSE;
     }
     return TRUE;
@@ -129,8 +124,6 @@ char* play_func_aux(int plid, char letter, int trial){
     static char str_return[30];
     strcpy(str_return, "RLG ");
 
-    char trial_str[13];
-    sprintf(trial_str, "%d\n", trial);
 
     if(return_num == RETURN_PLAY_DUP){
         strcpy(&str_return[strlen(str_return)], "DUP ");
@@ -145,6 +138,9 @@ char* play_func_aux(int plid, char letter, int trial){
     }else{
         return parse_msg_play_ok(n_pos, trial);
     }
+
+    char trial_str[13];
+    sprintf(trial_str, "%d\n", get_current_guesses(plid));
 
     strcpy(&str_return[strlen(str_return)], trial_str);
     printf("%s", str_return);
