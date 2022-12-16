@@ -13,14 +13,13 @@ char * process_request(char * buffer_request){
         int *r = (int*)malloc(sizeof(int)*2);
         int plid;
 
-        //char buffer_request2[32];
-        //strcpy(buffer_request2, buffer_request);//to correct weird bug
+        char *buffer_request2 = strdup(buffer_request);
 
         if((plid = start_func(&buffer_request[strlen(START_OP_CODE) + 1])) == EXIT_FAILURE){
             return MSG_ERROR;
         }
 
-        if(!start_input_correct(buffer_request, &r, plid)){
+        if(!start_input_correct(buffer_request2, &r, plid)){
             return "RSG NOK\n";
         }else{
             return parse_msg_start(r);
@@ -58,7 +57,6 @@ int start_func(char * buffer_request){
     if((plid_ret = plid_valid(plid)) == FALSE) return EXIT_FAILURE; /*if player id is not valid
                                                                     then return failure; else
                                                                      convert plid to int in plid ret*/
-    //printf("%s", buffer_request);
     return plid_ret;
 }
 

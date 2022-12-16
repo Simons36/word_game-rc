@@ -4,27 +4,14 @@
 #include "../include/game_data.h"
 
 int start_command(char* plid){
-    char **sng_msg = calloc(2, sizeof(char*));
-    void *msg = malloc(2);
-    size_t msg_len;
-
+    char msg_send[64];
     char resp[128];
     char temp[4];
 
 
-    sng_msg[0] = (char*)malloc(strlen(START_MSG) + 1);
-    sng_msg[1] = (char*) malloc(strlen(plid) + 1);
-    strcpy(sng_msg[0], START_MSG);
-    strcpy(sng_msg[1], plid);
+    sprintf(msg_send, "%s %s\n", START_MSG, plid);
 
-    msg_len = parse_msg(sng_msg, msg, 2);
-
-    strcpy(resp, send_msg_udp(msg, msg_len));
-
-    free(sng_msg[0]);
-    free(sng_msg[1]);
-    free(sng_msg);
-    free(msg);
+    strcpy(resp, send_msg_udp(msg_send, strlen(msg_send) + 1));
 
     if(sscanf(resp, "%s", temp) != 1) exit(1);
 
@@ -52,37 +39,18 @@ int start_command(char* plid){
 }
 
 int play_command(char * plid, char *letter){
-    char **plg_msg = calloc(4, sizeof(char*));
-    void *msg = malloc(2);
-    size_t msg_len;
     char trials_str[12];
 
     char resp[128];
 
-    plg_msg[0] = (char*)malloc(strlen(PLAY_MSG) + 1);
-    strcpy(plg_msg[0], PLAY_MSG);
-
-    plg_msg[1] = (char*)malloc(strlen(plid) + 1);
-    strcpy(plg_msg[1], plid);
-
-    plg_msg[2] = (char*)malloc(sizeof(char) + 1);
-    strcpy(plg_msg[2], letter);
-
-    plg_msg[3] = (char*)malloc(sizeof(char) + 1);
     sprintf(trials_str, "%d", get_trials() + 1);
-    strcpy(plg_msg[3], trials_str);
 
-    msg_len = parse_msg(plg_msg, msg, 4);
+    //msg_len = parse_msg(plg_msg, msg, 4);
 
-    strcpy(resp, send_msg_udp(msg, msg_len));
+    char msg_send[64];
+    sprintf(msg_send, "%s %s %s %s\n", PLAY_MSG, plid, letter, trials_str);
 
-    free(plg_msg[0]);
-    free(plg_msg[1]);
-    free(plg_msg[2]);
-    free(plg_msg[3]);
-    free(msg);
-
-
+    strcpy(resp, send_msg_udp(msg_send, strlen(msg_send) + 1));
 
     char temp[4];
     if(sscanf(resp, "%s", temp) != 1) exit(1);
@@ -129,38 +97,17 @@ int play_command(char * plid, char *letter){
 }
 
 void guess_command(char* plid, char* word){
-    /*
-    char **plg_msg = calloc(4, sizeof(char*));
-    void *msg = malloc(2);
-    size_t msg_len;
     char trials_str[12];
+    sprintf(trials_str, "%d", get_trials() + 1);
 
     char resp[128];
-    char temp[4];
 
-    plg_msg[0] = (char*)malloc(strlen(PLAY_MSG) + 1);
-    strcpy(plg_msg[0], PLAY_MSG);
+    char msg_send[64];
 
-    plg_msg[1] = (char*)malloc(strlen(plid) + 1);
-    strcpy(plg_msg[1], plid);
+    sprintf(msg_send, "%s %s %s %s\n", GUESS_MSG, plid, word, trials_str);
+    strcpy(resp, send_msg_udp(msg_send, strlen(msg_send) + 1));
 
-    plg_msg[2] = (char*)malloc(strlen(word) + 1);
-    strcpy(plg_msg[2], word);
-
-    plg_msg[3] = (char*)malloc(sizeof(char) + 1);
-    sprintf(trials_str, "%d", get_trials() + 1);
-    strcpy(plg_msg[3], trials_str);
-
-    msg_len = parse_msg(plg_msg, msg, 4);
-
-    strcpy(resp, send_msg_udp(msg, msg_len));
-
-    free(plg_msg[0]);
-    free(plg_msg[1]);
-    free(plg_msg[2]);
-    free(plg_msg[3]);
-    free(msg);
-    */
+    printf("%s\n", resp);
 }
 
 void ignore_line(){
@@ -200,6 +147,7 @@ void play_win(char letter){
     complete_word(letter);
     print_word();
     printf("Congratulations! You have guessed the word and won the game\n");
+    clear_game();
 }
 
 
