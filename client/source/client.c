@@ -15,18 +15,15 @@ int main(int argc, char *argv[])
         if (scanf("%s", command) != 1)
             return EXIT_FAILURE;
 
-        if (!strcmp(command, START_COM) || !strcmp(command, START_COM_SHORT))
-        {
+        if (!strcmp(command, START_COM) || !strcmp(command, START_COM_SHORT)){
 
-            if (!strcmp(plid, ""))
-            {
+            if (!strcmp(plid, "")){
                 if (scanf("%s", plid) != 1)
                     return EXIT_FAILURE;
                 if (start_command(plid) == EXIT_FAILURE)
                     strcpy(plid, "");
             }
-            else
-            {
+            else{
                 printf("Game has already been started, with player id: %s\n", plid);
             }
             ignore_line(); /*ignore rest of line*/
@@ -39,13 +36,6 @@ int main(int argc, char *argv[])
                 if(play_command(plid, letter) == 1) strcpy(plid, "");
                 free(letter);
             }else{
-                if (scanf("%s", letter) != 1)
-                    return EXIT_FAILURE;
-                if (play_command(plid, letter) == 1)
-                    strcpy(plid, "");
-            }
-            else
-            {
                 printf("Error: there is no ongoing game\n");
             }
             ignore_line();
