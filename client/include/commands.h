@@ -9,12 +9,16 @@
 #define PLAY_MSG "PLG"
 #define PLAY_MSG_RESP "RLG"
 
+#define QUIT_MSG "QUT"
+#define QUIT_MSG_RESP "RQT"
+
 int start_command(char* plid);
 int play_command(char * plid, char *letter);
 int plid_exists(char * plid);
 void play_place_letter(char letter, char * n_pos);
 void ignore_line();
 void play_wrong_letter(char letter);
+int quit_command(char* plid);
 
 /**
  * @brief Function used when server responds that client won the game;
