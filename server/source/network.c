@@ -47,7 +47,7 @@ void udp_connection(){
     if(n==-1) /*error*/ exit(1);
 
     while (1){
-        char *buffer = (char*)malloc(sizeof(char)*60);
+        char *buffer = (char*)malloc(sizeof(char)*60);   
         char response[60];
         strcpy(buffer, "");
 

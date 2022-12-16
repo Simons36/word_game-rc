@@ -2,22 +2,28 @@
 #include "../include/network.h"
 #include "../include/commands.h"
 
-int main(int argc, char *argv[]){
+int main(int argc, char *argv[])
+{
     char command[6];
     char plid[6] = "";
 
-    if(set_ips(argc, argv) != 0) return EXIT_FAILURE;
+    if (set_ips(argc, argv) != 0)
+        return EXIT_FAILURE;
 
-    while (1){
-        if(scanf("%s", command) != 1) return EXIT_FAILURE;
-        
+    while (1)
+    {
+        if (scanf("%s", command) != 1)
+            return EXIT_FAILURE;
 
-        if(!strcmp(command, START_COM) || !strcmp(command, START_COM_SHORT)){
+        if (!strcmp(command, START_COM) || !strcmp(command, START_COM_SHORT)){
 
-            if(!strcmp(plid, "")){
-                if(scanf("%s", plid) != 1) return EXIT_FAILURE;
-                if(start_command(plid) == EXIT_FAILURE) strcpy(plid, "");
-            }else{
+            if (!strcmp(plid, "")){
+                if (scanf("%s", plid) != 1)
+                    return EXIT_FAILURE;
+                if (start_command(plid) == EXIT_FAILURE)
+                    strcpy(plid, "");
+            }
+            else{
                 printf("Game has already been started, with player id: %s\n", plid);
             }
             ignore_line(); /*ignore rest of line*/
@@ -33,6 +39,21 @@ int main(int argc, char *argv[]){
                 printf("Error: there is no ongoing game\n");
             }
             ignore_line();
+        }
+        else if (!strcmp(command, QUIT_COM) || !strcmp(command, EXIT_COM))
+        {
+            if (plid_exists(plid))
+            {
+                if (quit_command(plid) == 0) strcpy(plid, "");
+            }
+            else
+            {
+                printf("Error: there is no ongoing game\n");
+            }
+            if (!strcmp(command, EXIT_COM)){
+                return 0;
+            }
+            ignore_line();
 
         }else if(!strcmp(command, GUESS_COM) || !strcmp(command, GUESS_COM_SHORT)){
             if(plid_exists(plid)){
@@ -44,9 +65,9 @@ int main(int argc, char *argv[]){
             }else{
 
             }
-        }else if(!strcmp(command, EXIT_COM)){
-            break;
-        }else{
+        }
+        else
+        {
             printf("Invalid command: %s\n", command);
             ignore_line();
         }

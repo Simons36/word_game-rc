@@ -149,3 +149,52 @@ void play_win(char letter){
     printf("Congratulations! You have guessed the word and won the game\n");
     clear_game();
 }
+
+
+int quit_command(char* plid){
+    char **sng_msg = calloc(2, sizeof(char*));
+    void *msg = malloc(2);
+    size_t msg_len;
+
+    char resp[128];
+    char temp[4];
+
+
+    sng_msg[0] = (char*)malloc(strlen(QUIT_MSG) + 1);
+    sng_msg[1] = (char*) malloc(strlen(plid) + 1);
+    strcpy(sng_msg[0], QUIT_MSG);
+    strcpy(sng_msg[1], plid);
+
+    msg_len = parse_msg(sng_msg, msg, 2);
+
+    strcpy(resp, send_msg_udp(msg, msg_len));
+
+    free(sng_msg[0]);
+    free(sng_msg[1]);
+    free(sng_msg);
+    free(msg);
+
+    if(sscanf(resp, "%s", temp) != 1) exit(1);
+
+    if(!strcmp(temp, QUIT_MSG_RESP)){
+        if(sscanf(&resp[4], "%s", temp) != 1) exit(1);
+
+        printf("%s\n", temp);
+        
+        if(!strcmp(temp, "NOK")){
+            printf("Error connecting to the server: there is no ongoing game\n");
+            return EXIT_FAILURE;
+        }
+
+        if(!strcmp(temp, "OK")){
+            clear_game();
+        }
+    }else if(!strcmp(temp, "ERR")){
+        printf("Error: Invalid plid or syntax \n");
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
+}
+
+

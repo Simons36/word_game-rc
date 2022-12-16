@@ -11,6 +11,8 @@
 #define PLAY_COM "play"
 #define PLAY_COM_SHORT "pl"
 
+#define QUIT_COM "quit"
+
 #define GUESS_COM "guess"
 #define GUESS_COM_SHORT "gw"
 

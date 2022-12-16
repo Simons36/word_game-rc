@@ -29,7 +29,12 @@ char * process_request(char * buffer_request){
 
         return play_func(buffer_request);
         
+    }else if(!strcmp(command, QUIT_OP_CODE)){
+
+        return quit_func(buffer_request);
+        
     }
+
     return MSG_ERROR;
 }
 
@@ -197,4 +202,30 @@ int get_len_n_pos(int ** n_pos){
         len++;
     }
     return len;
+}
+
+
+
+char* quit_func(char *input){
+
+    int plid;
+    char temp[128];
+    size_t count = strlen(PLAY_OP_CODE);
+
+    if(input[count] != ' ')  return "RQT ERR\n";
+    
+    count += 1;
+    sscanf(&input[count], "%s", temp);
+
+    if((plid = plid_valid(temp)) == FALSE)return "RQT ERR\n";
+
+    if(!check_player(plid)) return "RQT NOK\n";
+
+    printf("%s", input);
+
+    if(remove_player(plid) == EXIT_FAILURE){
+        return "RQT ERR\n";
+    }
+
+    return "RQT OK\n";
 }
