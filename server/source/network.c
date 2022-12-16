@@ -49,6 +49,7 @@ void udp_connection(){
     while (1){
         char *buffer = (char*)malloc(sizeof(char)*60);
         char response[60];
+        strcpy(buffer, "");
 
         addrlen=sizeof(addr);
         n=recvfrom(fd,buffer,60,0,

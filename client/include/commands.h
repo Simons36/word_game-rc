@@ -9,6 +9,9 @@
 #define PLAY_MSG "PLG"
 #define PLAY_MSG_RESP "RLG"
 
+#define GUESS_MSG "PWG"
+#define GUESS_MSG_RESP "RWG"
+
 /**
  * @brief Function that handles the start command
  * @return EXIT FAILURE if there was an error, 0 otherwise 

@@ -22,7 +22,7 @@ int main(int argc, char *argv[]){
             }
             ignore_line(); /*ignore rest of line*/
 
-        }else if((!strcmp(command, PLAY_COM) || !strcmp(command, PLAY_COM_SHORT))){
+        }else if(!strcmp(command, PLAY_COM) || !strcmp(command, PLAY_COM_SHORT)){
             if(plid_exists(plid)){
                 char *letter = (char*)malloc(sizeof(char)*2);
 
@@ -34,12 +34,13 @@ int main(int argc, char *argv[]){
             }
             ignore_line();
 
-        }else if(!strcmp(command, "guess")){
+        }else if(!strcmp(command, GUESS_COM) || !strcmp(command, GUESS_COM_SHORT)){
             if(plid_exists(plid)){
-                char word[30] = "";
+                char *word = (char*)malloc(sizeof(char)*31);
 
                 if(scanf("%s", word) != 1) return EXIT_FAILURE;
                 guess_command(plid, word);
+                free(word);
             }else{
 
             }
