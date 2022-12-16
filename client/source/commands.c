@@ -230,8 +230,6 @@ int quit_command(char* plid){
 
     if(!strcmp(temp, QUIT_MSG_RESP)){
         if(sscanf(&resp[4], "%s", temp) != 1) exit(1);
-
-        printf("%s\n", temp);
         
         if(!strcmp(temp, "NOK")){
             printf("Error connecting to the server: there is no ongoing game\n");

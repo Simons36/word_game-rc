@@ -46,12 +46,12 @@ int main(int argc, char *argv[])
             {
                 if (quit_command(plid) == 0) strcpy(plid, "");
             }
+            else if (!strcmp(command, EXIT_COM)){
+                return 0;
+            }
             else
             {
                 printf("Error: there is no ongoing game\n");
-            }
-            if (!strcmp(command, EXIT_COM)){
-                return 0;
             }
             ignore_line();
 

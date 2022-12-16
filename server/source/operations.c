@@ -223,7 +223,7 @@ char* quit_func(char *input){
 
     if(!check_player(plid)) return "RQT NOK\n";
 
-    printf("%s", input);
+    /*printf("%s", input);*/
 
     if(remove_player(plid) == EXIT_FAILURE){
         return "RQT ERR\n";

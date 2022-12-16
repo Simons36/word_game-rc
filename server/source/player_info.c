@@ -1,4 +1,5 @@
 #include "../include/player_info.h"
+#include "time.h"
 
 sessions sess_info[MAX_PLAYERS];
 
@@ -164,6 +165,7 @@ int play_letter(int plid, char letter, int trial_numb, int** n_pos){
             n_pos[n] = NULL;
             sess_info[k]->letters_left[i] = GUESSED;
             correct_guess = TRUE;
+        
         }else if(sess_info[k]->letters_left[i] == NOT_GUESSED){
             is_all_guessed = FALSE;
         }
@@ -173,11 +175,14 @@ int play_letter(int plid, char letter, int trial_numb, int** n_pos){
         if(verbose_flag){
             printf(" - WIN (game ended)\n");
         }
+        sess_info[k]->right_guesses++;
+        get_file_name(k);
         return RETURN_PLAY_WIN;
     }else if(correct_guess){
         if(verbose_flag){
             printf(" - %d hits; word not guessed\n", n);
         }
+        sess_info[k]->right_guesses++;
         return RETURN_PLAY_OK;
     }else{
         sess_info[k]->errors++;
@@ -217,4 +222,22 @@ char *get_word(int plid){
 int get_current_guesses(int plid){
     sessions sess = get_player(plid);
     return sess->guesses;
+}
+
+
+
+
+void get_file_name(int k){
+    time_t t;
+    struct tm tm;
+    int score;
+    int plid;
+    int year,month,day,hour,min,sec;
+    plid = sess_info[k]->plid;
+    t = time(NULL);
+    tm = *localtime(&t);
+    score = ((double) sess_info[k]->right_guesses / (double) sess_info[k]->guesses )*100;
+    year = tm.tm_year + 1900; month = tm.tm_mon + 1; day = tm.tm_mday;
+    hour = tm.tm_hour; min = tm.tm_min; sec = tm.tm_sec;
+    printf("now: %d-%02d-%02d %02d:%02d:%02d\nscore = %d\nplid = %d\n", year, month, day, hour, min, sec, score, plid);
 }
