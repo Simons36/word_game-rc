@@ -24,15 +24,25 @@ int main(int argc, char *argv[]){
 
         }else if((!strcmp(command, PLAY_COM) || !strcmp(command, PLAY_COM_SHORT))){
             if(plid_exists(plid)){
-                char letter[2];
+                char *letter = (char*)malloc(sizeof(char)*2);
 
-                if(scanf("%s", letter) != 1) return EXIT_FAILURE;
+                if(scanf("%s", letter) != 1) EXIT_FAILURE;
                 if(play_command(plid, letter) == 1) strcpy(plid, "");
+                free(letter);
             }else{
                 printf("Error: there is no ongoing game\n");
             }
             ignore_line();
 
+        }else if(!strcmp(command, "guess")){
+            if(plid_exists(plid)){
+                char word[30] = "";
+
+                if(scanf("%s", word) != 1) return EXIT_FAILURE;
+                guess_command(plid, word);
+            }else{
+
+            }
         }else if(!strcmp(command, EXIT_COM)){
             break;
         }else{

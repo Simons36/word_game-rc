@@ -47,7 +47,7 @@ void udp_connection(){
     if(n==-1) /*error*/ exit(1);
 
     while (1){
-        char buffer[60];   
+        char *buffer = (char*)malloc(sizeof(char)*60);
         char response[60];
 
         addrlen=sizeof(addr);
@@ -61,15 +61,14 @@ void udp_connection(){
 
         k = write(1,buffer,n);
         if(k != n) exit(1);
-        
 
         strcpy(response, process_request(buffer));
-
     
         n=sendto(fd,response,strlen(response) + 1,0,
             (struct sockaddr*)&addr,addrlen);
 
         if(n==-1)/*error*/exit(1);
+        free(buffer);
     }
     freeaddrinfo(res);
     close(fd);

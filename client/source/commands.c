@@ -58,7 +58,6 @@ int play_command(char * plid, char *letter){
     char trials_str[12];
 
     char resp[128];
-    char temp[4];
 
     plg_msg[0] = (char*)malloc(strlen(PLAY_MSG) + 1);
     strcpy(plg_msg[0], PLAY_MSG);
@@ -85,6 +84,7 @@ int play_command(char * plid, char *letter){
 
 
 
+    char temp[4];
     if(sscanf(resp, "%s", temp) != 1) exit(1);
 
     if(!strcmp(temp, PLAY_MSG_RESP)){
@@ -110,7 +110,7 @@ int play_command(char * plid, char *letter){
 
             if(!strcmp(temp, "WIN")){
                 play_win(letter[0]);
-                return 0;
+                return 1;
             }else if(!strcmp(temp, "NOK")){
                 play_wrong_letter(letter[0]);
             }
@@ -126,6 +126,41 @@ int play_command(char * plid, char *letter){
         //TODO: implement when server response is wrong
         return -1;
     }
+}
+
+void guess_command(char* plid, char* word){
+    /*
+    char **plg_msg = calloc(4, sizeof(char*));
+    void *msg = malloc(2);
+    size_t msg_len;
+    char trials_str[12];
+
+    char resp[128];
+    char temp[4];
+
+    plg_msg[0] = (char*)malloc(strlen(PLAY_MSG) + 1);
+    strcpy(plg_msg[0], PLAY_MSG);
+
+    plg_msg[1] = (char*)malloc(strlen(plid) + 1);
+    strcpy(plg_msg[1], plid);
+
+    plg_msg[2] = (char*)malloc(strlen(word) + 1);
+    strcpy(plg_msg[2], word);
+
+    plg_msg[3] = (char*)malloc(sizeof(char) + 1);
+    sprintf(trials_str, "%d", get_trials() + 1);
+    strcpy(plg_msg[3], trials_str);
+
+    msg_len = parse_msg(plg_msg, msg, 4);
+
+    strcpy(resp, send_msg_udp(msg, msg_len));
+
+    free(plg_msg[0]);
+    free(plg_msg[1]);
+    free(plg_msg[2]);
+    free(plg_msg[3]);
+    free(msg);
+    */
 }
 
 void ignore_line(){

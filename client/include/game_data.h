@@ -15,6 +15,12 @@ void create_game_data(int n_letters, int max_errors);
 void set_game_data(int n_letters, int max_errors);
 int get_n_letters();
 int get_max_errors();
+/**
+ * @brief Get the letter by pos object
+ * 
+ * @param pos
+ * @return char 
+ */
 char get_letter_by_pos(int pos);
 void print_word();
 void increment_trials();
@@ -52,6 +58,7 @@ void clear_game();
 
 /**
  * Sets the number of trials to trial
+ * 
  */
 void set_trials(int trial);
 
