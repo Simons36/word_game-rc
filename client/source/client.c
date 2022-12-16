@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
             }
             ignore_line();
         }
-        else if (!strcmp(command, QUIT_COM))
+        else if (!strcmp(command, QUIT_COM) || !strcmp(command, EXIT_COM))
         {
             if (plid_exists(plid))
             {
@@ -49,6 +49,9 @@ int main(int argc, char *argv[])
             else
             {
                 printf("Error: there is no ongoing game\n");
+            }
+            if (!strcmp(command, EXIT_COM)){
+                return 0;
             }
             ignore_line();
 
@@ -61,8 +64,6 @@ int main(int argc, char *argv[])
             }else{
 
             }
-        }else if(!strcmp(command, EXIT_COM)){
-            break;
         }
         else
         {
