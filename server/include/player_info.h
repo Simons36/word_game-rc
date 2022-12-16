@@ -47,4 +47,12 @@ sessions get_player(int plid);
 char *get_word(int plid);
 int get_current_guesses(int plid);
 
+/**
+ * @brief Removes an active game from the array of games
+ * 
+ * @param plid player that will be removed
+ * @return EXIT_SUCCESS if everything went right, EXIT_FAILURE if there were errors
+ */
+int remove_player(int plid);
+
 #endif

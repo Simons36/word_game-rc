@@ -61,10 +61,8 @@ void udp_connection(){
 
         k = write(1,buffer,n);
         if(k != n) exit(1);
-        
 
         strcpy(response, process_request(buffer));
-
     
         n=sendto(fd,response,strlen(response) + 1,0,
             (struct sockaddr*)&addr,addrlen);

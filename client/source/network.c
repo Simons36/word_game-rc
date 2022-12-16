@@ -30,8 +30,8 @@ int set_ips(int argc, char* argv[]){
     }
 
     if(DEV_MODE){
-        printf("con: gsip: %s\n", gs_ip_port.gsip);
-        printf("con: gsport: %s\n", gs_ip_port.gsport);
+        printf("dev gsip: %s\n", gs_ip_port.gsip);
+        printf("dev gsport: %s\n", gs_ip_port.gsport);
     }
 
     return 0;
@@ -66,15 +66,15 @@ char* send_msg_udp(void *buffer_msg, size_t len_msg){
         printf("Invalid ip: could not connect to server;");
         exit(1); //error
     } 
-    /*
-    */
+
 
     for(int i = 0; i < 3; i++){/*if server doesn´t respond try to send message three times*/
         n = sendto(fd, buffer_msg, len_msg, 0, res->ai_addr, res->ai_addrlen);
         if(n==-1) exit(1); //error
 
         if(DEV_MODE){
-            printf("con: sent: %zd\n", n);   
+            printf("dev sent: %zd\n", n);
+            printf("dev message: %s\n", (char*)buffer_msg);
         }
 
 
@@ -95,8 +95,8 @@ char* send_msg_udp(void *buffer_msg, size_t len_msg){
 
 
     if(DEV_MODE){
-        printf("con: received: %zd\n", n);
-        printf("con: msg: %s", buffer);
+        printf("dev received: %zd\n", n);
+        printf("dev msg: %s", buffer);
     }
     
     freeaddrinfo(res);

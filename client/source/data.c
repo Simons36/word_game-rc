@@ -17,7 +17,6 @@ size_t parse_msg(char** args_array, void *msg, int argc){
         len_msg += 1;
     }
     memset(msg_count, '\n', 1);
-
     return len_msg;
 }
 /*

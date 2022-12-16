@@ -1,3 +1,4 @@
+#credits to Tomas Correia from fcul, my man
 CC = gcc
 CFLAGS = -Wall -g -O2
 
@@ -41,4 +42,6 @@ $(SERVER)/object/%.o: $(SERVER)/source/%.c $(SERVER_INC)
 
 clean:
 	rm -f $(SERVER_OBJ) $(CLIENT_OBJ) $(SERVER_BIN) $(CLIENT_BIN)
+
+
 

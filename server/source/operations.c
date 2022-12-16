@@ -17,7 +17,6 @@ char * process_request(char * buffer_request){
         //strcpy(buffer_request2, buffer_request);//to correct weird bug
 
         if((plid = start_func(&buffer_request[strlen(START_OP_CODE) + 1])) == EXIT_FAILURE){
-            printf("reiw\n");
             return MSG_ERROR;
         }
 
@@ -145,9 +144,13 @@ char* play_func_aux(int plid, char letter, int trial){
     sprintf(trial_str, "%d\n", get_current_guesses(plid));
 
     strcpy(&str_return[strlen(str_return)], trial_str);
-    printf("%s", str_return);
+    
+    if(return_num == RETURN_PLAY_WIN || return_num == RETURN_PLAY_OVR){
+        if(remove_player(plid) == EXIT_FAILURE){
+            return NULL;
+        }
+    }
     return str_return;
-
 }
 
 int plid_valid(char * plid){

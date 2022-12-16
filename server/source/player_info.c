@@ -185,7 +185,6 @@ int play_letter(int plid, char letter, int trial_numb, int** n_pos){
             if(verbose_flag){
                 printf("; game already over, max errors(%d) was reached\n", sess_info[k]->max_errors);
             }
-            //if(remove_player(plid) == EXIT_FAILURE) exit(-1);
             return RETURN_PLAY_OVR;
         }
 
