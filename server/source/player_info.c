@@ -32,6 +32,7 @@ int *put_player(int plid)
             sess_info[i] = malloc(sizeof(struct client_info));
             sess_info[i]->plid = plid;
             sess_info[i]->guesses = 0;
+            sess_info[i]->right_guesses = 0;
             sess_info[i]->errors = 0;
             sess_info[i]->word_to_guess = pick_word_from_file(i);
 
