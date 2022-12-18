@@ -82,3 +82,9 @@ void clear_game(){
 void set_trials(int trial){
     game_info->n_trials = trial;
 }
+
+void complete_full_word(char *word){
+    for(int i = 0; i < strlen(game_info->letters_guessed); i++){
+        game_info->letters_guessed[i] = word[i];
+    }
+}

@@ -9,13 +9,13 @@ char * process_request(char * buffer_request){
 
     //printf("%s\n", command);
 
-    if(!strcmp(command, START_OP_CODE)){
+    if(!strcmp(command, START_MSG)){
         int *r = (int*)malloc(sizeof(int)*2);
         int plid;
 
         char *buffer_request2 = strdup(buffer_request);
 
-        if((plid = start_func(&buffer_request[strlen(START_OP_CODE) + 1])) == EXIT_FAILURE){
+        if((plid = start_func(&buffer_request[strlen(START_MSG) + 1])) == EXIT_FAILURE){
             return MSG_ERROR;
         }
 
@@ -25,14 +25,17 @@ char * process_request(char * buffer_request){
             return parse_msg_start(r);
         }
 
-    }else if(!strcmp(command, PLAY_OP_CODE)){
+    }else if(!strcmp(command, PLAY_MSG)){
 
         return play_func(buffer_request);
         
-    }else if(!strcmp(command, QUIT_OP_CODE)){
+    }else if(!strcmp(command, QUIT_MSG)){
 
         return quit_func(buffer_request);
         
+    }else if(!strcmp(command, GUESS_MSG)){
+
+        return guess_func(buffer_request);
     }
 
     return MSG_ERROR;
@@ -61,7 +64,7 @@ int start_func(char * buffer_request){
 }
 
 int start_input_correct(char *input, int **r, int plid){
-    if(input[strlen(START_OP_CODE)] != ' '){
+    if(input[strlen(START_MSG)] != ' '){
         return FALSE;
     }else if((*r = put_player(plid)) == NULL){
         return FALSE;
@@ -81,7 +84,7 @@ char* play_func(char *input){
     int plid;
     char temp[128];
     char letter;
-    size_t count = strlen(PLAY_OP_CODE);
+    size_t count = strlen(PLAY_MSG);
 
     if(input[count] != ' ')  return "RLG_ERR\n";
     
@@ -210,7 +213,7 @@ char* quit_func(char *input){
 
     int plid;
     char temp[128];
-    size_t count = strlen(PLAY_OP_CODE);
+    size_t count = strlen(QUIT_MSG);
 
     if(input[count] != ' ')  return "RQT ERR\n";
     
@@ -228,4 +231,70 @@ char* quit_func(char *input){
     }
 
     return "RQT OK\n";
+}
+
+char* guess_func(char *input){
+    char op_code[4];
+    char plid_str[20];
+    char word[31];
+    int trials, plid;
+    if(sscanf(input, "%s %s %s %d", 
+                                    op_code, 
+                                    plid_str, 
+                                    word, 
+                                    &trials) != 4) return MSG_GUESS_ERROR;
+    
+    if((plid = plid_valid(plid_str)) == FALSE) return MSG_GUESS_ERROR;
+
+    if(check_player(plid) == FALSE) return MSG_GUESS_ERROR;
+
+    if(word_valid(word) == FALSE) return MSG_GUESS_ERROR;
+
+    return guess_func_aux(plid, word, trials);
+}
+
+int word_valid(char *word){
+    for(int i = 0; i < strlen(word); i++){
+        if((word[i] < 'a' || word[i] > 'z') && (word[i] < 'A' || word[i] > 'Z')) return FALSE;
+    }
+    return TRUE;
+}
+
+char *guess_func_aux(int plid, char *word, int trials){
+    static char resp[16];
+    strcpy(resp, GUESS_MSG_RESP);
+    int to_remove = FALSE;
+
+    if(check_word_already_guessed(plid, word)){
+        strcpy(&resp[strlen(GUESS_MSG_RESP)], " DUP ");
+
+    }else if(trials != get_current_guesses(plid) + 1){
+        strcpy(&resp[strlen(GUESS_MSG_RESP)], " INV ");
+
+    }else{
+        increment_guesses(plid);
+
+        if(!strcmp(word, get_word(plid))){
+            strcpy(&resp[strlen(GUESS_MSG_RESP)], " WIN ");
+            to_remove = TRUE;
+        }else{
+            increment_errors(plid);
+            if(check_over_error_limit(plid)){
+                strcpy(&resp[strlen(GUESS_MSG_RESP)], " OVR ");
+                to_remove = TRUE;
+            }else{
+                add_wrong_word(plid, word);
+                strcpy(&resp[strlen(GUESS_MSG_RESP)], " NOK ");
+            }
+        }
+    }
+
+    int trials_to_send = get_current_guesses(plid);
+    sprintf(&resp[strlen(resp)], "%d\n", trials_to_send);
+
+    if(to_remove){
+        remove_player(plid);
+    }
+
+    return resp;
 }

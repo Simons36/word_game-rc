@@ -3,20 +3,7 @@
 
 #include "client.h"
 
-#define START_MSG "SNG"
-#define START_MSG_RESP "RSG"
 
-#define PLAY_MSG "PLG"
-#define PLAY_MSG_RESP "RLG"
-
-#define GUESS_MSG "PWG"
-#define GUESS_MSG_RESP "RWG"
-
-#define QUIT_MSG "QUT"
-#define QUIT_MSG_RESP "RQT"
-
-#define QUIT_MSG "QUT"
-#define QUIT_MSG_RESP "RQT"
 
 /**
  * @brief Function that handles the start command
@@ -35,7 +22,7 @@ int play_command(char * plid, char *letter);
 /**
  * @brief Function that handles guess command
  */
-void guess_command(char *plid, char *word);
+int guess_command(char *plid, char *word);
 
 int plid_exists(char * plid);
 void play_place_letter(char letter, char * n_pos);
@@ -48,6 +35,5 @@ int quit_command(char* plid);
  * fills out remaining spots with letter, prints word
  * and prints to the player winning message
  */
-void play_win(char letter);
-
+void func_win();
 #endif

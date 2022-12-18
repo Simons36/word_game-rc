@@ -62,4 +62,7 @@ void clear_game();
  */
 void set_trials(int trial);
 
+void complete_full_word(char *word);
+
+
 #endif

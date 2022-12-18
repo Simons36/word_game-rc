@@ -30,6 +30,7 @@ typedef struct client_info{
     int letters_guessed[26];
     int *letters_left;
     int errors;
+    char **words_sent;
 }*sessions;
 
 typedef struct letter_guessed_pos{
@@ -57,5 +58,35 @@ void create_file(int k);
  * @return EXIT_SUCCESS if everything went right, EXIT_FAILURE if there were errors
  */
 int remove_player(int plid);
+
+/**
+ * @brief This function checks if the word sent by the client in the guess command was already sent
+ * in a previous trial
+ * 
+ * @return TRUE if already played, FALSE otherwise
+ */
+int check_word_already_guessed(int plid, char *word);
+
+/**
+ * @brief Increment number of guesses of player with plid
+ */
+void increment_guesses(int plid);
+
+/**
+ * @brief Increment number of errors of player with plid
+ */
+void increment_errors(int plid);
+
+/**
+ * @brief Function to check if number of errors is over the number of max errors
+ *
+ * @return TRUE if errors > max errors, FALSE otherwise
+ */
+int check_over_error_limit(int plid);
+
+/**
+ * @brief Adds word to the wrong word list
+ */
+void add_wrong_word(int plid, char *word);
 
 #endif

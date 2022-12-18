@@ -10,4 +10,18 @@
 #define FALSE 0
 #define TRUE 1
 
+#define START_MSG "SNG"
+#define START_MSG_RESP "RSG"
+
+#define PLAY_MSG "PLG"
+#define PLAY_MSG_RESP "RLG"
+
+#define GUESS_MSG "PWG"
+#define GUESS_MSG_RESP "RWG"
+
+#define QUIT_MSG "QUT"
+#define QUIT_MSG_RESP "RQT"
+
+
+
 #endif

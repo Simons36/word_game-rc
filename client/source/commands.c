@@ -66,7 +66,6 @@ int play_command(char * plid, char *letter){
         if(!strcmp(temp, "DUP")){
             printf("Error: this letter was already sent in a previous trial\n");
         }else if(!strcmp(temp, "OVR")){
-            increment_errors();
             printf("Game over: the number of maximum errors (%d) has been reached\n", get_max_errors());
             clear_game();
             return 1; //to signal to client main function that game is over, to clear plid
@@ -77,7 +76,8 @@ int play_command(char * plid, char *letter){
         }else{
 
             if(!strcmp(temp, "WIN")){
-                play_win(letter[0]);
+                complete_word(letter[0]);
+                func_win();
                 return 1;
             }else if(!strcmp(temp, "NOK")){
                 play_wrong_letter(letter[0]);
@@ -96,7 +96,7 @@ int play_command(char * plid, char *letter){
     }
 }
 
-void guess_command(char* plid, char* word){
+int guess_command(char* plid, char* word){
     char trials_str[12];
     sprintf(trials_str, "%d", get_trials() + 1);
 
@@ -107,7 +107,48 @@ void guess_command(char* plid, char* word){
     sprintf(msg_send, "%s %s %s %s\n", GUESS_MSG, plid, word, trials_str);
     strcpy(resp, send_msg_udp(msg_send, strlen(msg_send) + 1));
 
-    printf("%s\n", resp);
+    char command[4];
+    char status[4];
+    int new_trials;
+
+    if(sscanf(resp, "%s %s %d\n", command, status, &new_trials) != 3){
+        printf("Wrong protocl message received by the server, last command not executed\n");
+        return -1;
+    }
+
+    if(!strcmp(command, GUESS_MSG_RESP)){
+        if(!strcmp(status, "DUP")){
+            printf("Error: this word has already been guessed\n");
+        }else if(!strcmp(status, "INV")){
+            printf("Error: trial number sent by the client (%d) was not the one expected by the server\n", get_trials() + 1);
+        }else if(!strcmp(status, "ERR")){
+            printf("Error: the syntax of the command was incorrect, the PLID is invalid, or there is no ongoing game\n");
+        }else{
+
+            if(!strcmp(status, "WIN")){
+                complete_full_word(word);
+                func_win();
+                return 1;
+            }else if(!strcmp(status, "OVR")){
+                printf("Game over: the number of max errors (%d) was reached\n", get_max_errors());
+                clear_game();
+                return 1;
+            }else if(!strcmp(status, "NOK")){
+                increment_errors();
+                printf("Wrong guess: '%s' is not the correct word\n", word);
+            }else{
+                printf("Wrong protocol message received by the server, last command not executed\n");
+                return -1;
+            }
+        }
+    }else{
+        printf("Wrong protocol message received by the server, last command not executed\n");
+        return -1;
+    }
+
+    set_trials(new_trials);
+    print_word();
+    return 0;
 }
 
 void ignore_line(){
@@ -143,8 +184,7 @@ void play_wrong_letter(char letter){
     printf("Letter %c doesn't belong to the word\n", letter);
 }
 
-void play_win(char letter){
-    complete_word(letter);
+void func_win(){
     print_word();
     printf("Congratulations! You have guessed the word and won the game\n");
     clear_game();
@@ -152,28 +192,13 @@ void play_win(char letter){
 
 
 int quit_command(char* plid){
-    char **sng_msg = calloc(2, sizeof(char*));
-    void *msg = malloc(2);
-    size_t msg_len;
+    char resp[64];
+    char msg_send[64];
+    sprintf(msg_send, "%s %s\n", QUIT_COM, plid);
 
-    char resp[128];
+    strcpy(resp, send_msg_udp(msg_send, strlen(msg_send) + 1));
+    
     char temp[4];
-
-
-    sng_msg[0] = (char*)malloc(strlen(QUIT_MSG) + 1);
-    sng_msg[1] = (char*) malloc(strlen(plid) + 1);
-    strcpy(sng_msg[0], QUIT_MSG);
-    strcpy(sng_msg[1], plid);
-
-    msg_len = parse_msg(sng_msg, msg, 2);
-
-    strcpy(resp, send_msg_udp(msg, msg_len));
-
-    free(sng_msg[0]);
-    free(sng_msg[1]);
-    free(sng_msg);
-    free(msg);
-
     if(sscanf(resp, "%s", temp) != 1) exit(1);
 
     if(!strcmp(temp, QUIT_MSG_RESP)){

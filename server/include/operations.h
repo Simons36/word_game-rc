@@ -5,16 +5,7 @@
 
 #define MSG_ERROR "ERR\n"
 
-#define START_OP_CODE "SNG"
-#define START_RESP_OP_CODE "RSG"
-
-#define PLAY_OP_CODE "PLG"
-#define PLAY_RESP_OP_CODE "RLG"
-
-#define QUIT_OP_CODE "QUT"
-#define QUIT_RESP_OP_CODE "RQT"
-
-
+#define MSG_GUESS_ERROR "RWG ERR\n"
 
 char * process_request(char * buffer_request);
 int start_func(char * buffer_request);
@@ -29,5 +20,17 @@ char* parse_msg_play_ok(int **n_pos, int trial);
 int get_len_n_pos(int ** n_pos);
 
 char* quit_func(char *input);
+char *guess_func(char* input);
+/**
+ * @brief Checks if a word in the guess command is valid
+ */
+int word_valid(char *word);
+
+/**
+ * @brief Auxilary function of guess_func
+ * 
+ * @return Message to be sent to the client
+ */
+char *guess_func_aux(int plid, char *word, int trials);
 
 #endif

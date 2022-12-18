@@ -42,15 +42,13 @@ int main(int argc, char *argv[])
         }
         else if (!strcmp(command, QUIT_COM) || !strcmp(command, EXIT_COM))
         {
-            if (plid_exists(plid))
-            {
+            if (plid_exists(plid)){
                 if (quit_command(plid) == 0) strcpy(plid, "");
             }
             else if (!strcmp(command, EXIT_COM)){
                 return 0;
             }
-            else
-            {
+            else{
                 printf("Error: there is no ongoing game\n");
             }
             ignore_line();
@@ -60,7 +58,7 @@ int main(int argc, char *argv[])
                 char *word = (char*)malloc(sizeof(char)*31);
 
                 if(scanf("%s", word) != 1) return EXIT_FAILURE;
-                guess_command(plid, word);
+                if(guess_command(plid, word) == 1) strcpy(plid, "");
                 free(word);
             }else{
 
