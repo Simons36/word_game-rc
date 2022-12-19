@@ -16,6 +16,12 @@
 #define GUESS_COM "guess"
 #define GUESS_COM_SHORT "gw"
 
+#define SCOREBOARD_COM "scoreboard"
+#define SCOREBOARD_COM_SHORT "sb"
+
+#define HINT_COM "hint"
+#define HINT_COM_SHORT "h"
+
 #define EXIT_COM "exit"
 
 #endif
