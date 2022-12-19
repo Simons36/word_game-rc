@@ -48,7 +48,7 @@ int play_letter(int plid, char letter, int trial, int** n_pos);
 sessions get_player(int plid);
 char *get_word(int plid);
 int get_current_guesses(int plid);
-void get_file_name(char file_name[], int k);
+int get_file_name(char file_name[], int k);
 void create_file(int k);
 
 /**

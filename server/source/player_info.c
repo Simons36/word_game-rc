@@ -240,18 +240,30 @@ int get_current_guesses(int plid)
 
 
 void create_file(int k){
-    //FILE *fp;
+    FILE *fp;
     char file_path[100];
     char file_name[50];
-    get_file_name(file_name, k);
-    sprintf(file_path, "../source/SCORES/%s", file_name);
+    char file_line[100];
+    int score;
+    score = get_file_name(file_name, k);
+    sprintf(file_path, "server/source/SCORES/%s", file_name);
     printf("%s\n", file_path);
-    //fp = fopen (file_path, "r+");;
+    sprintf(file_line,"%d %d %s %d %d", score, sess_info[k]->plid, sess_info[k]->word_to_guess, sess_info[k]->right_guesses, sess_info[k]->guesses);
+    printf("%s\n", file_line);
+    fp = fopen(file_path, "w+");
+    if ( fp == NULL){  
+        printf("Didnt create\n");
+        exit(EXIT_FAILURE);
+    } 
+   else{
+         fputs(file_line,fp);
+    }
+    fclose(fp);
 }
 
 
 
-void get_file_name(char file_name[], int k){
+int get_file_name(char file_name[], int k){
     time_t t;
     struct tm tm;
     int score;
@@ -268,6 +280,7 @@ void get_file_name(char file_name[], int k){
     min = tm.tm_min;
     sec = tm.tm_sec;
     sprintf(file_name,"%d_%d_%d%d%d_%d%d%d.txt", score, plid, day, month, year, hour, min, sec);
+    return score;
 }
 
 int check_word_already_guessed(int plid, char *word){
