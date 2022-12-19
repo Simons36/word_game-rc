@@ -252,10 +252,10 @@ void create_file(int k){
     printf("%s\n", file_line);
     fp = fopen(file_path, "w+");
     if ( fp == NULL){  
-        printf("Didnt create\n");
+        printf("Failed to create file\n");
         exit(EXIT_FAILURE);
     } 
-   else{
+    else{
          fputs(file_line,fp);
     }
     fclose(fp);
