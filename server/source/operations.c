@@ -36,6 +36,8 @@ char * process_request(char * buffer_request){
     }else if(!strcmp(command, GUESS_MSG)){
 
         return guess_func(buffer_request);
+    }else if(!strcmp(command, HINT_MSG)){
+        return hint_func();
     }
 
     return MSG_ERROR;
@@ -297,4 +299,9 @@ char *guess_func_aux(int plid, char *word, int trials){
     }
 
     return resp;
+}
+
+char* hint_func(){
+    printf("jwrbwiubw\n");
+    return NULL;
 }

@@ -92,7 +92,7 @@ void tcp_connection(){
     hints.ai_socktype=SOCK_STREAM; //TCP socket
     hints.ai_flags=AI_PASSIVE;
 
-    errcode=getaddrinfo(NULL,SERVER_PORT,&hints,&res);
+    errcode=getaddrinfo(NULL,gsport,&hints,&res);
     if((errcode)!=0)/*error*/exit(1);
 
     n=bind(fd,res->ai_addr,res->ai_addrlen);
@@ -111,6 +111,8 @@ void tcp_connection(){
 
         n = write(1,"received: ",10); if (n==-1) exit(1);
         n = write(1,buffer,n); if (n==-1) exit(1);
+
+        process_request(buffer);
 
         n=write(newfd,buffer,n);
 

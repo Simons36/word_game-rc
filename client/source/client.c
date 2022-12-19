@@ -63,9 +63,11 @@ int main(int argc, char *argv[])
             }else{
 
             }
-        }
-        else
-        {
+        }else if(!strcmp(command, SCOREBOARD_COM) || !strcmp(command, SCOREBOARD_COM_SHORT)){
+            scoreboard_command();
+        }else if(!strcmp(command, HINT_COM) || !strcmp(command, HINT_COM_SHORT)){
+            hint_command(plid);
+        }else{
             printf("Invalid command: %s\n", command);
             ignore_line();
         }
