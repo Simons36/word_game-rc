@@ -220,4 +220,14 @@ int quit_command(char* plid){
     return EXIT_SUCCESS;
 }
 
+void scoreboard_command(){
+    char msg[5];
+    sprintf(msg, "%s\n", SCOREBOARD_MSG);
+    send_msg_tcp(msg, strlen(msg) + 1);
+}
 
+void hint_command(char *plid){
+    char msg[20];
+    sprintf(msg, "%s %s\n", HINT_MSG, plid);
+    send_msg_tcp(msg, strlen(msg) + 1);
+}

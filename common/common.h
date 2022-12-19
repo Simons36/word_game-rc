@@ -22,6 +22,10 @@
 #define QUIT_MSG "QUT"
 #define QUIT_MSG_RESP "RQT"
 
+#define SCOREBOARD_MSG "GSB"
+#define SCOREBOARD_MSG_RESP "RSB"
 
+#define HINT_MSG "GHL"
+#define HINT_MSG_RESP "RHL"
 
 #endif

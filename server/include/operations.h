@@ -33,4 +33,8 @@ int word_valid(char *word);
  */
 char *guess_func_aux(int plid, char *word, int trials);
 
+void scoreboard_func();
+
+char* hint_func();
+
 #endif

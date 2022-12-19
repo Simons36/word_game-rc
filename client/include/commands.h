@@ -36,4 +36,9 @@ int quit_command(char* plid);
  * and prints to the player winning message
  */
 void func_win();
+
+void scoreboard_command();
+
+void hint_command(char *plid);
+
 #endif
