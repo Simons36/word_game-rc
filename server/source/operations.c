@@ -1,5 +1,6 @@
 #include "../include/operations.h"
 #include "../include/player_info.h"
+#include "../include/ist_operations.h"
 
 char * process_request(char * buffer_request){
     char command[4] = "";
@@ -12,8 +13,12 @@ char * process_request(char * buffer_request){
     if(!strcmp(command, START_MSG)){
         int *r = (int*)malloc(sizeof(int)*2);
         int plid;
+        int i_file;
 
         char *buffer_request2 = strdup(buffer_request);
+
+        FindTopScores();
+        create_scoreboard_file();
 
         if((plid = start_func(&buffer_request[strlen(START_MSG) + 1])) == EXIT_FAILURE){
             return MSG_ERROR;
