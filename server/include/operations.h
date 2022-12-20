@@ -7,6 +7,12 @@
 
 #define MSG_GUESS_ERROR "RWG ERR\n"
 
+typedef struct msgfile{
+    char *filename;
+    ssize_t f_size;
+    FILE *file;
+}*msg_file;
+
 char * process_request(char * buffer_request);
 int start_func(char * buffer_request);
 int start_input_correct(char *input, int **resp, int plid);

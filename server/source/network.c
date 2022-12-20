@@ -109,12 +109,12 @@ void tcp_connection(){
         n=read(newfd,buffer,128);
         if(n==-1)/*error*/exit(1);
 
-        n = write(1,"received: ",10); if (n==-1) exit(1);
-        n = write(1,buffer,n); if (n==-1) exit(1);
+        char *resp = process_request(buffer);
 
-        process_request(buffer);
-
-        n=write(newfd,buffer,n);
+        while (n > 0){
+            n=write(newfd,resp,999999999);
+        }
+        
 
         if(n==-1)/*error*/exit(1);
         close(newfd);

@@ -2,6 +2,7 @@
 #define PLAYER_INFO_H
 
 #include "server.h"
+#include "operations.h"
 
 #include <time.h>
 
@@ -88,5 +89,10 @@ int check_over_error_limit(int plid);
  * @brief Adds word to the wrong word list
  */
 void add_wrong_word(int plid, char *word);
+
+/**
+ * @brief Get the file image to the word assigned to plid
+ */
+msg_file get_file_image(int plid);
 
 #endif

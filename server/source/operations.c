@@ -42,7 +42,7 @@ char * process_request(char * buffer_request){
 
         return guess_func(buffer_request);
     }else if(!strcmp(command, HINT_MSG)){
-        return hint_func();
+        return hint_func(buffer_request);
     }
 
     return MSG_ERROR;
@@ -306,7 +306,18 @@ char *guess_func_aux(int plid, char *word, int trials){
     return resp;
 }
 
-char* hint_func(){
-    printf("jwrbwiubw\n");
-    return NULL;
+char *hint_func(char *buffer_request){
+    char op_code[4];
+    char plid_str[20];
+    int plid;
+
+    if(sscanf(buffer_request, "%s %s\n", op_code, plid_str) != 2) return "RHL NOK\n";
+
+    if((plid = plid_valid(plid_str)) == FALSE) return "RHL NOK\n";
+
+    if(check_player(plid) == FALSE) return "RHL NOK\n";
+
+    msg_file msg_to_send = get_file_image(plid);
+
+    
 }

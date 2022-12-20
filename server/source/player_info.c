@@ -350,3 +350,49 @@ void add_wrong_word(int plid, char *word){
         }
     }
 }
+
+msg_file get_file_image(int plid){
+    char word[31];
+    char str_file[30];
+    char path[30];
+    char filename[30];
+    
+    for(int i = 0; i < MAX_PLAYERS; i++){
+        if(sess_info[i]->plid == plid){
+            strcpy(word, sess_info[i]->word_to_guess);
+            break;
+        }
+    }
+
+    FILE *word_file = fopen("server/source/words/words.txt", "r");
+
+    for(;strcmp(word, str_file);){
+        fscanf(word_file, "%s %s\n", str_file, path);
+    }
+
+    strcpy(filename,find_filename(path));
+
+    msg_file msg_to_send = (msg_file)malloc(sizeof(struct msgfile));
+
+    msg_to_send->filename = (char*)malloc(sizeof(char)*strlen(filename));
+    strcpy(msg_to_send->filename, filename);
+
+    msg_to_send->file = (FILE*)malloc(sizeof(FILE*));
+    msg_to_send->file = fopen(path, "r");
+
+    //falta file size
+    
+    return fopen(path, "r");
+}
+
+char *find_filename(char *path){
+    char filename[30];
+    char *token = strtok(path, "/");
+
+    while(token != NULL){
+        strcpy(filename, token);
+        token = strtok(NULL, "/");
+    }
+
+    return filename;
+}
