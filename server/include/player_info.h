@@ -5,6 +5,7 @@
 #include "operations.h"
 
 #include <time.h>
+#include <sys/stat.h>
 
 #define MAX_PLAYERS 100
 #define MAX_ERRORS_6_CHAR 7
@@ -41,8 +42,8 @@ typedef struct letter_guessed_pos{
 
 
 int check_player(int plid);
-int* put_player(int plid);
-char *pick_word_from_file(int n_line);
+int *put_player(int plid, char **word, char **path_image);
+char *pick_word_from_file(int n_line, char **path_image);
 int get_guesses_max(int len);
 int get_n_words(FILE *ptr);
 int play_letter(int plid, char letter, int trial, int** n_pos);
@@ -93,6 +94,14 @@ void add_wrong_word(int plid, char *word);
 /**
  * @brief Get the file image to the word assigned to plid
  */
-msg_file get_file_image(int plid);
+msg_file get_file_image(FILE *game_file_ptr, char *op_code);
+
+char *find_filename(char *path);
+
+msg_file parse_msg_file(char *path, char *op_code);
+
+FILE * check_player_tcp(int plid);
+
+ssize_t get_filesize(char *path);
 
 #endif

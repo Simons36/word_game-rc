@@ -4,7 +4,7 @@ int FindLastGame ( char *PLID , char *fname )
 {
     struct dirent **filelist;
     int n_entries, found;
-    char dirname[20] ;
+    char dirname[50] ;
 
     sprintf ( dirname , "/server/source/GAMES/%s/" ,PLID ) ;
     n_entries = scandir ( dirname , &filelist , 0 , alphasort ) ;
@@ -16,9 +16,9 @@ int FindLastGame ( char *PLID , char *fname )
     {  
         while ( n_entries--)
         {
-            if ( filelist[nentries]->dname[0] != '.' )
+            if ( filelist[n_entries]->d_name[0] != '.' )
             {
-                sprintf ( fname , "/server/source/GAMES/%s/%s" ,PLID , filelist[nentries]->d_name ) ;
+                sprintf ( fname , "/server/source/GAMES/%s/%s" ,PLID , filelist[n_entries]->d_name ) ;
                 found = 1;
             }
             free( filelist[n_entries] ) ;

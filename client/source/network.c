@@ -105,11 +105,11 @@ char* send_msg_udp(void *buffer_msg, size_t len_msg){
     return &buffer[0];
 }
 
-void send_msg_tcp(void *buffer_msg, size_t len_msg){
+int send_msg_tcp(void *buffer_msg, size_t len_msg){
     int fd,errcode;
     ssize_t n;
     struct addrinfo hints,*res;
-    char *buffer[];
+    char *buffer = (char*)malloc(sizeof(char)*60);
 
     fd=socket(AF_INET,SOCK_STREAM,0); //TCP socket
     if (fd==-1) exit(1); //error
@@ -124,20 +124,12 @@ void send_msg_tcp(void *buffer_msg, size_t len_msg){
     n=connect(fd,res->ai_addr,res->ai_addrlen);
     if(n==-1)/*error*/exit(1);
 
-    n=write(fd,"Hello!\n",7);
+    n=write(fd,buffer_msg,len_msg);
     if(n==-1)/*error*/exit(1);
-    
-    while (n > 0){
-        n=read(fd,buffer,128);
-        if(n==-1)/*error*/exit(1);
-    }
-    
-
-    n = write(1,"echo: ",6); if(n == -1) exit(1);
-
-    n = write(1,buffer,n); if(n == -1) exit(1);
 
     freeaddrinfo(res);
-    close(fd);
+    free(buffer);
+
+    return fd;
 }
 
