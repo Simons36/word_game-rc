@@ -250,7 +250,7 @@ void create_file(int k){
     score = get_file_name(file_name, k);
     sprintf(file_path, "server/source/SCORES/%s", file_name);
     printf("%s\n", file_path);
-    sprintf(file_line,"%d %d %s %d %d", score, sess_info[k]->plid, sess_info[k]->word_to_guess, sess_info[k]->right_guesses, sess_info[k]->guesses);
+    sprintf(file_line,"%03d %d %s %d %d", score, sess_info[k]->plid, sess_info[k]->word_to_guess, sess_info[k]->right_guesses, sess_info[k]->guesses);
     printf("%s\n", file_line);
     fp = fopen(file_path, "w+");
     if ( fp == NULL){  
@@ -281,7 +281,7 @@ int get_file_name(char file_name[], int k){
     hour = tm.tm_hour;
     min = tm.tm_min;
     sec = tm.tm_sec;
-    sprintf(file_name,"%d_%d_%d%d%d_%d%d%d.txt", score, plid, day, month, year, hour, min, sec);
+    sprintf(file_name,"%03d_%d_%d%d%d_%d%d%d.txt", score, plid, day, month, year, hour, min, sec);
     return score;
 }
 
