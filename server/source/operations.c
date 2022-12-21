@@ -13,12 +13,11 @@ char * process_request(char * buffer_request){
     if(!strcmp(command, START_MSG)){
         int *r = (int*)malloc(sizeof(int)*2);
         int plid;
-        int i_file;
+        //int i_file;
 
         char *buffer_request2 = strdup(buffer_request);
 
-        FindTopScores();
-        create_scoreboard_file();
+        
 
         if((plid = start_func(&buffer_request[strlen(START_MSG) + 1])) == EXIT_FAILURE){
             return MSG_ERROR;
@@ -54,6 +53,9 @@ msg_file process_request_tcp(char *buffer_request){
 
     if(!strcmp(command, HINT_MSG)){
         return hint_func(buffer_request);
+    }else if (!strcmp(command, SCOREBOARD_MSG)){
+        printf("rguiwfbef\n");
+        return scoreboard_func(buffer_request);
     }
 
     return NULL;
@@ -350,4 +352,14 @@ msg_file msg_error_tcp(char* msg){
     strcpy(msg_to_send->op_code_resp, msg);
 
     return msg_to_send;
+}
+
+msg_file scoreboard_func(){
+
+    if(FindTopScores() == 0){
+        return msg_error_tcp("RSB EMPTY");
+    }
+    
+    char *path = create_scoreboard_file();
+    return parse_msg_file(path, "RSB OK");
 }

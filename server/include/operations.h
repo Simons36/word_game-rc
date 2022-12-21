@@ -43,7 +43,7 @@ int word_valid(char *word);
  */
 char *guess_func_aux(int plid, char *word, int trials);
 
-void scoreboard_func();
+msg_file scoreboard_func();
 
 msg_file hint_func();
 

@@ -20,7 +20,8 @@ typedef struct score_list{
 }*SCORELIST;
 
 int FindLastGame( char *PLID , char *fname );
-void FindTopScoress();
-void create_scoreboard_file();
+int FindTopScores();
+char *create_scoreboard_file();
+void put_empty_line(int line_size, FILE *fp);
 
 #endif

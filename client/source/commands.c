@@ -223,7 +223,7 @@ int quit_command(char* plid){
 void scoreboard_command(){
     char msg[5];
     sprintf(msg, "%s\n", SCOREBOARD_MSG);
-    send_msg_tcp(msg, strlen(msg));
+    process_request_tcp(send_msg_tcp(msg, strlen(msg)));
 }
 
 void hint_command(char *plid){
@@ -236,48 +236,73 @@ void hint_command(char *plid){
 }
 
 void process_request_tcp(int socket){
+    sleep(1);
     int n;
     char command[4] = "";
-    char path[50];
+    char status[4] = "";
+    char path[50] = "";
+    char filename[30] = "";
+    char file_size_str[15] = "";
+    int file_size;
 
-    n = read(socket, command, 3); 
-    if(n == -1) exit(1);
+    void *temp_buffer = malloc(50);
+    n = read(socket, temp_buffer, 50);
+    printf("buffer %s\n",(char*) temp_buffer);
+    sscanf(temp_buffer, "%s %s %s %s", command, status, filename, file_size_str);
+    printf("%s\n", filename);
 
-    char status[4];
-    char temp[5] = "";
-    n = read(socket, temp, 4);
-    if(n == -1) exit(1);
-    sscanf(status, "%s", temp);
+    int start_f_data = strlen(command) + 1 + strlen(status) + 1 + strlen(filename) + 1 + strlen(file_size_str) + 1;
 
+    sscanf(file_size_str, "%d", &file_size);
     if(!strcmp(command, HINT_MSG_RESP)){
-        strcpy(path, "client/source/image");
         if(!strcmp(status, "NOK")){
             printf("Error: there was a problem in the hint command\n");
             return;
         }
+        strcpy(path, "client/source/image");
+    }else if(!strcmp(command, SCOREBOARD_MSG_RESP)){
+        if(!strcmp(status, "EMPTY")){
+            printf("No game has been finished yet\n");
+            return;
+        }
+        strcpy(path, "client/source/scoreboard");
     }
-
-    char *filename = read_one_byte(socket);
-
-    int file_size;
-    sscanf(read_one_byte(socket), "%d", &file_size);
 
     strcat(path, "/");
     strcat(path, filename);
 
-    int bytes_written = 0;
     void *buffer = malloc(file_size);
+
+    memcpy(buffer, temp_buffer + start_f_data, 50 - start_f_data);
+    free(temp_buffer);
+    int bytes_written = 50 - start_f_data;
 
     while(bytes_written < file_size){
         n = read(socket, buffer + bytes_written, file_size - bytes_written); if(n == -1) exit(1);
-        printf("fewewf %d\n", bytes_written);
+        //printf("fewewf %d\n", bytes_written);
         bytes_written += n;
     }
+    
+    FILE *ptr = fopen(path, "w");
+    size_t k = fwrite(buffer, sizeof(ptr[0]), file_size, ptr); 
+    if(k != file_size){
+        printf("Error writing to file\n");
+        exit(1);
+    }
 
-    FILE *ptr = fopen(path, "wb");
-    size_t k = fwrite(buffer, sizeof(ptr[0]), file_size, ptr);
+    fclose(ptr);
     free(buffer);
-    printf("1 %zd", k);
+
+    if(!strcmp(command, SCOREBOARD_MSG_RESP)){
+        FILE *ptr_to_read = fopen(path, "r");
+        char str[100];
+        while (fgets(str, 100, ptr_to_read)){
+            printf("%s", str);
+        }
+        fclose(ptr_to_read);
+    }
+
+    close(socket);
 }
 
 char *read_one_byte(int socket){
