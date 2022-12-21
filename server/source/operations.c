@@ -41,12 +41,24 @@ char * process_request(char * buffer_request){
     }else if(!strcmp(command, GUESS_MSG)){
 
         return guess_func(buffer_request);
-    }else if(!strcmp(command, HINT_MSG)){
-        return hint_func(buffer_request);
     }
 
     return MSG_ERROR;
 }
+
+
+msg_file process_request_tcp(char *buffer_request){
+    char command[4] = "";
+
+    strncpy(command, buffer_request, 3);
+
+    if(!strcmp(command, HINT_MSG)){
+        return hint_func(buffer_request);
+    }
+
+    return NULL;
+}
+
 
 int start_func(char * buffer_request){
     char plid[6];
@@ -71,11 +83,19 @@ int start_func(char * buffer_request){
 }
 
 int start_input_correct(char *input, int **r, int plid){
+    char *word = calloc(30, sizeof(char));
+    char *path_image = calloc(50, sizeof(char*));
+
     if(input[strlen(START_MSG)] != ' '){
         return FALSE;
-    }else if((*r = put_player(plid)) == NULL){
+    }else if((*r = put_player(plid, &word, &path_image)) == NULL){
         return FALSE;
     }
+
+    if(create_file_game(plid, word, path_image) == EXIT_FAILURE){
+        printf("Error creating the game file\n");
+    }
+
     return TRUE;
 }
 
@@ -306,18 +326,28 @@ char *guess_func_aux(int plid, char *word, int trials){
     return resp;
 }
 
-char *hint_func(char *buffer_request){
+msg_file hint_func(char *buffer_request){
     char op_code[4];
     char plid_str[20];
     int plid;
+    FILE *game_file_ptr;
 
-    if(sscanf(buffer_request, "%s %s\n", op_code, plid_str) != 2) return "RHL NOK\n";
+    if(sscanf(buffer_request, "%s %s\n", op_code, plid_str) != 2) return msg_error_tcp(MSG_HINT_ERROR);
 
-    if((plid = plid_valid(plid_str)) == FALSE) return "RHL NOK\n";
+    if((plid = plid_valid(plid_str)) == FALSE) return msg_error_tcp(MSG_HINT_ERROR);
 
-    if(check_player(plid) == FALSE) return "RHL NOK\n";
+    if((game_file_ptr = check_player_tcp(plid)) == NULL) return msg_error_tcp(MSG_HINT_ERROR);
 
-    msg_file msg_to_send = get_file_image(plid);
+    return get_file_image(game_file_ptr, "RHL OK");
+}
 
-    
+msg_file msg_error_tcp(char* msg){
+    msg_file msg_to_send = (msg_file)malloc(sizeof(struct msgfile));
+
+    msg_to_send->file = NULL;
+
+    msg_to_send->op_code_resp = (char*)malloc(sizeof(char)*15);
+    strcpy(msg_to_send->op_code_resp, msg);
+
+    return msg_to_send;
 }

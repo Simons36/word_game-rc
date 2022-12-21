@@ -2,15 +2,19 @@
 #define OPERATIONS_H
 
 #include "server.h"
+#include "../include/handle_files.h"
 
 #define MSG_ERROR "ERR\n"
 
 #define MSG_GUESS_ERROR "RWG ERR\n"
 
+#define MSG_HINT_ERROR "RHL NOK\n"
+
 typedef struct msgfile{
     char *filename;
     ssize_t f_size;
     FILE *file;
+    char *op_code_resp;
 }*msg_file;
 
 char * process_request(char * buffer_request);
@@ -41,6 +45,10 @@ char *guess_func_aux(int plid, char *word, int trials);
 
 void scoreboard_func();
 
-char* hint_func();
+msg_file hint_func();
+
+msg_file process_request_tcp(char *buffer_request);
+
+msg_file msg_error_tcp(char* msg);
 
 #endif

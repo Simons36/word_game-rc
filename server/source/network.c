@@ -85,6 +85,10 @@ void tcp_connection(){
     int newfd;
 
     fd=socket(AF_INET,SOCK_STREAM,0); //TCP socket
+    if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &(int){1}, sizeof(int)) < 0){
+        printf("setsockopt(SO_REUSEADDR) failed");
+        return exit(1);
+    }
     if (fd==-1) exit(1); //error
 
     memset(&hints,0,sizeof hints);
@@ -107,12 +111,33 @@ void tcp_connection(){
         /*error*/ exit(1);
 
         n=read(newfd,buffer,128);
+        printf("%s\n", buffer);
         if(n==-1)/*error*/exit(1);
 
-        char *resp = process_request(buffer);
+        msg_file resp = process_request_tcp(buffer);
 
-        while (n > 0){
-            n=write(newfd,resp,999999999);
+        if(resp->file == NULL){
+            n = write(newfd, resp->op_code_resp, strlen(resp->op_code_resp));
+            if(n == -1) exit(1);
+        }else{
+            void *msg_begin = malloc(50 + resp->f_size);
+            sprintf(msg_begin, "%s %s %zd ", resp->op_code_resp, resp->filename, resp->f_size);
+            int size_begin = strlen(msg_begin);
+            n = fread(msg_begin + size_begin, 1, resp->f_size, resp->file);
+            ssize_t count_bytes = 0;
+
+            printf("file size %zd\n", resp->f_size);
+
+            while (count_bytes < resp->f_size){
+                n = write(newfd, msg_begin + count_bytes, resp->f_size + size_begin - count_bytes);
+                if(n == -1) exit(1);
+                printf("%zd\n", n);
+                count_bytes += n;
+            }
+            free(msg_begin);
+
+            printf("written %zd\n", count_bytes);
+            
         }
         
 

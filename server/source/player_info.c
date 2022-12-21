@@ -16,8 +16,7 @@ int check_player(int plid){
     return FALSE;
 }
 
-int *put_player(int plid)
-{
+int *put_player(int plid, char **word, char **path_image){
     static int ret[2];
 
     if (check_player(plid)){
@@ -34,7 +33,9 @@ int *put_player(int plid)
             sess_info[i]->guesses = 0;
             sess_info[i]->right_guesses = 0;
             sess_info[i]->errors = 0;
-            sess_info[i]->word_to_guess = pick_word_from_file(i);
+            sess_info[i]->word_to_guess = pick_word_from_file(i, path_image);
+            //printf("%s\n", sess_info[i]->word_to_guess);
+            strcpy(*word, sess_info[i]->word_to_guess);
 
             len_word = (int)strlen(sess_info[i]->word_to_guess);
             ret[0] = len_word;
@@ -80,10 +81,11 @@ int remove_player(int plid){
     return EXIT_FAILURE;
 }
 
-char *pick_word_from_file(int n_line){
+char *pick_word_from_file(int n_line, char **path_image){
     srand(time(NULL));
     FILE *ptr, *ptrcpy;
     char *word = (char *)malloc(sizeof(char) * 30);
+    //*path_image = (char*)malloc(sizeof(char) *50);
 
     ptr = fopen("server/source/words/words.txt", "r");
     ptrcpy = fopen("server/source/words/words.txt", "r");
@@ -102,7 +104,7 @@ char *pick_word_from_file(int n_line){
             return NULL; // skip line
     }
 
-    if (fscanf(ptr, "%s", word) != 1){
+    if (fscanf(ptr, "%s %s", word , *path_image) != 2){
         printf("Error reading the word\n");
         return NULL;
     }
@@ -351,42 +353,17 @@ void add_wrong_word(int plid, char *word){
     }
 }
 
-msg_file get_file_image(int plid){
+msg_file get_file_image(FILE *game_file_ptr, char *op_code){
     char word[31];
-    char str_file[30];
-    char path[30];
-    char filename[30];
-    
-    for(int i = 0; i < MAX_PLAYERS; i++){
-        if(sess_info[i]->plid == plid){
-            strcpy(word, sess_info[i]->word_to_guess);
-            break;
-        }
-    }
+    char path[50];
 
-    FILE *word_file = fopen("server/source/words/words.txt", "r");
+    if(fscanf(game_file_ptr, "%s %s\n", word, path) != 2) return NULL;
 
-    for(;strcmp(word, str_file);){
-        fscanf(word_file, "%s %s\n", str_file, path);
-    }
-
-    strcpy(filename,find_filename(path));
-
-    msg_file msg_to_send = (msg_file)malloc(sizeof(struct msgfile));
-
-    msg_to_send->filename = (char*)malloc(sizeof(char)*strlen(filename));
-    strcpy(msg_to_send->filename, filename);
-
-    msg_to_send->file = (FILE*)malloc(sizeof(FILE*));
-    msg_to_send->file = fopen(path, "r");
-
-    //falta file size
-    
-    return fopen(path, "r");
+    return parse_msg_file(path, op_code);
 }
 
 char *find_filename(char *path){
-    char filename[30];
+    static char filename[30];
     char *token = strtok(path, "/");
 
     while(token != NULL){
@@ -395,4 +372,41 @@ char *find_filename(char *path){
     }
 
     return filename;
+}
+
+msg_file parse_msg_file(char *path, char *op_code){
+    char filename[30];
+    strcpy(filename,find_filename(strdup(path)));
+
+    msg_file msg_to_send = (msg_file)malloc(sizeof(struct msgfile));
+
+    msg_to_send->filename = (char*)malloc(sizeof(char)*strlen(filename));
+    strcpy(msg_to_send->filename, filename);
+
+    msg_to_send->file = (FILE*)malloc(sizeof(FILE*));
+    msg_to_send->file = fopen(path, "rb");
+
+    msg_to_send->f_size = get_filesize(path);
+
+    msg_to_send->op_code_resp = (char*)malloc(sizeof(char)*10);
+    strcpy(msg_to_send->op_code_resp, op_code);
+    
+    return msg_to_send;
+}
+
+FILE *check_player_tcp(int plid){
+    char file_path[40];
+    sprintf(file_path, "server/source/GAMES/GAME_%d.txt", plid);
+
+    FILE *ptr = fopen(file_path, "r");
+
+    return ptr;
+}
+
+ssize_t get_filesize(char *path){
+    FILE *ptr = fopen(path, "r");
+    fseek(ptr, 0L, SEEK_END);
+    ssize_t sz = ftell(ptr);
+    fclose(ptr);
+    return sz;
 }

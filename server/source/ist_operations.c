@@ -9,7 +9,7 @@ int FindLastGame ( char *PLID , char *fname )
 {
     struct dirent **filelist;
     int n_entries, found;
-    char dirname[20] ;
+    char dirname[50] ;
 
     sprintf ( dirname , "/server/source/GAMES/%s/" ,PLID ) ;
     n_entries = scandir ( dirname , &filelist , 0 , alphasort ) ;

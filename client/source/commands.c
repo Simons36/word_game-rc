@@ -11,7 +11,7 @@ int start_command(char* plid){
 
     sprintf(msg_send, "%s %s\n", START_MSG, plid);
 
-    strcpy(resp, send_msg_udp(msg_send, strlen(msg_send) + 1));
+    strcpy(resp, send_msg_udp(msg_send, strlen(msg_send)));
 
     if(sscanf(resp, "%s", temp) != 1) exit(1);
 
@@ -50,7 +50,7 @@ int play_command(char * plid, char *letter){
     char msg_send[64];
     sprintf(msg_send, "%s %s %s %s\n", PLAY_MSG, plid, letter, trials_str);
 
-    strcpy(resp, send_msg_udp(msg_send, strlen(msg_send) + 1));
+    strcpy(resp, send_msg_udp(msg_send, strlen(msg_send)));
 
     char temp[4];
     if(sscanf(resp, "%s", temp) != 1) exit(1);
@@ -105,7 +105,7 @@ int guess_command(char* plid, char* word){
     char msg_send[64];
 
     sprintf(msg_send, "%s %s %s %s\n", GUESS_MSG, plid, word, trials_str);
-    strcpy(resp, send_msg_udp(msg_send, strlen(msg_send) + 1));
+    strcpy(resp, send_msg_udp(msg_send, strlen(msg_send)));
 
     char command[4];
     char status[4];
@@ -196,7 +196,7 @@ int quit_command(char* plid){
     char msg_send[64];
     sprintf(msg_send, "%s %s\n", QUIT_COM, plid);
 
-    strcpy(resp, send_msg_udp(msg_send, strlen(msg_send) + 1));
+    strcpy(resp, send_msg_udp(msg_send, strlen(msg_send)));
     
     char temp[4];
     if(sscanf(resp, "%s", temp) != 1) exit(1);
@@ -223,11 +223,72 @@ int quit_command(char* plid){
 void scoreboard_command(){
     char msg[5];
     sprintf(msg, "%s\n", SCOREBOARD_MSG);
-    send_msg_tcp(msg, strlen(msg) + 1);
+    send_msg_tcp(msg, strlen(msg));
 }
 
 void hint_command(char *plid){
     char msg[20];
+
     sprintf(msg, "%s %s\n", HINT_MSG, plid);
-    send_msg_tcp(msg, strlen(msg) + 1);
+
+    process_request_tcp(send_msg_tcp(msg, strlen(msg)));
+
+}
+
+void process_request_tcp(int socket){
+    int n;
+    char command[4] = "";
+    char path[50];
+
+    n = read(socket, command, 3); 
+    if(n == -1) exit(1);
+
+    char status[4];
+    char temp[5] = "";
+    n = read(socket, temp, 4);
+    if(n == -1) exit(1);
+    sscanf(status, "%s", temp);
+
+    if(!strcmp(command, HINT_MSG_RESP)){
+        strcpy(path, "client/source/image");
+        if(!strcmp(status, "NOK")){
+            printf("Error: there was a problem in the hint command\n");
+            return;
+        }
+    }
+
+    char *filename = read_one_byte(socket);
+
+    int file_size;
+    sscanf(read_one_byte(socket), "%d", &file_size);
+
+    strcat(path, "/");
+    strcat(path, filename);
+
+    int bytes_written = 0;
+    void *buffer = malloc(file_size);
+
+    while(bytes_written < file_size){
+        n = read(socket, buffer + bytes_written, file_size - bytes_written); if(n == -1) exit(1);
+        printf("fewewf %d\n", bytes_written);
+        bytes_written += n;
+    }
+
+    FILE *ptr = fopen(path, "wb");
+    size_t k = fwrite(buffer, sizeof(ptr[0]), file_size, ptr);
+    free(buffer);
+    printf("1 %zd", k);
+}
+
+char *read_one_byte(int socket){
+    int n;
+    char c;
+    char *str = (char*)malloc(sizeof(char) * 35);
+
+    for(n = read(socket, &c, 1); c != ' ';n = read(socket, &c, 1)){
+        if(n == -1) exit(1);
+        sprintf(&str[strlen(str)], "%c", c);
+    }
+
+    return str;
 }
