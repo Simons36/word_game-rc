@@ -22,6 +22,9 @@
 #define HINT_COM "hint"
 #define HINT_COM_SHORT "h"
 
+#define STATE_COM "state"
+#define STATE_COM_SHORT "st"
+
 #define EXIT_COM "exit"
 
 #endif
