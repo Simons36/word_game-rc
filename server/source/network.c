@@ -111,7 +111,6 @@ void tcp_connection(){
         /*error*/ exit(1);
 
         n=read(newfd,buffer,128);
-        printf("%s\n", buffer);
         if(n==-1)/*error*/exit(1);
 
         msg_file resp = process_request_tcp(buffer);
@@ -126,20 +125,14 @@ void tcp_connection(){
             n = fread(msg_begin + size_begin, 1, resp->f_size, resp->file);
             ssize_t count_bytes = 0;
 
-            printf("file size %zd\n", resp->f_size);
-
             while (count_bytes < resp->f_size){
                 n = write(newfd, msg_begin + count_bytes, resp->f_size + size_begin - count_bytes);
                 if(n == -1) exit(1);
-                printf("%zd\n", n);
                 count_bytes += n;
             }
             free(msg_begin);
-
-            printf("written %zd\n", count_bytes);
             
         }
-        
 
         if(n==-1)/*error*/exit(1);
         close(newfd);

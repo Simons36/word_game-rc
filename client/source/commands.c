@@ -284,10 +284,11 @@ void process_request_tcp(int socket){
     }
     
     FILE *ptr = fopen(path, "w");
-    size_t k = fwrite(buffer, sizeof(ptr[0]), file_size, ptr); 
-    if(k != file_size){
-        printf("Error writing to file\n");
-        exit(1);
+
+    if(!strcmp(command, HINT_MSG_RESP)){
+        fwrite(buffer, sizeof(ptr[0]), file_size, ptr); 
+    }else{
+        fwrite(buffer, 1, file_size, ptr);
     }
 
     fclose(ptr);

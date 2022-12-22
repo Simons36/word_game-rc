@@ -3,7 +3,6 @@
 
 int main(int argc, char* argv[]){
     if(set_args(argc, argv) != 0) return EXIT_FAILURE;
-
     int n = fork();
 
     if(n == -1) exit(1);
