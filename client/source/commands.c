@@ -174,7 +174,6 @@ void play_place_letter(char letter, char* n_pos){
     for(int i = 0; i < num_times; i++){
         int pos = 0;
         if(sscanf(&n_pos[2 * numbs_read], "%d", &pos) != 1) exit(1);
-        printf("yeet %d\n", pos);
         numbs_read++;
         set_letter_by_pos(letter, pos);
     }
@@ -248,9 +247,7 @@ void process_request_tcp(int socket){
 
     void *temp_buffer = malloc(50);
     n = read(socket, temp_buffer, 50);
-    printf("buffer %s\n",(char*) temp_buffer);
     sscanf(temp_buffer, "%s %s %s %s", command, status, filename, file_size_str);
-    printf("%s\n", filename);
 
     int start_f_data = strlen(command) + 1 + strlen(status) + 1 + strlen(filename) + 1 + strlen(file_size_str) + 1;
 

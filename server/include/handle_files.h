@@ -17,6 +17,12 @@ int count_lines(FILE *ptr);
 
 int check_letter_in_word(char *word, char letter);
 
-void create_temp_file(char *path);
+char *create_temp_file(char *path, int plid, char type);
+
+void erase_temp_files(char *op_code_status, char *filename);
+
+int belongs_to_list(char *letters_guessed, char letter);
+
+char *get_filename(char *path);
 
 #endif

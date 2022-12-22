@@ -5,21 +5,22 @@ SCORELIST list;
 
 
 
-int FindLastGame (char *PLID, char *fname){
+int FindLastGame (int plid, char *fname){
     struct dirent **filelist;
     int n_entries, found;
     char dirname[50] ;
 
-    sprintf(dirname, "/server/source/GAMES/%s/", PLID);
+    sprintf(dirname, "server/source/GAMES/%d/", plid);
     n_entries = scandir(dirname, &filelist,0, alphasort);
     found = 0;
+    printf("%s\n", dirname);
     
     if(n_entries <= 0)
         return 0;
     else{  
         while(n_entries--){
             if(filelist[n_entries]->d_name[0] != '.'){
-                sprintf(fname, "server/source/GAMES/%s/%s", PLID, filelist[n_entries]->d_name);
+                sprintf(fname, "server/source/GAMES/%d/%s", plid, filelist[n_entries]->d_name);
                 found = 1;
             }
             free(filelist[n_entries]);
@@ -83,7 +84,6 @@ int FindTopScores(){
 char *create_scoreboard_file(){
     char *path = (char*)malloc(sizeof(char) * 60);
     sprintf(path, "%s%07d.txt", "server/source/scoreboard/TOPSCORES_", getpid());
-    printf("%s\n", path);
     FILE * fp ;
     char file_line[100] = "";
     int i = 0;
@@ -128,7 +128,6 @@ char *create_scoreboard_file(){
                 list->n_tot[i]);
 
             strcat(file_line, temp_string);
-            printf("%s", file_line);
             fputs(file_line,fp);    
             i++;
         }

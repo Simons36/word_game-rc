@@ -50,7 +50,7 @@ void move_game_file(int plid, char code){
     sprintf(path, "server/source/GAMES/%d", plid);
 
     if (stat(path, &st) == -1) {
-        mkdir(path, 0700);
+        mkdir(path, 0777);
     }
 
     time_t rawtime;
@@ -77,23 +77,26 @@ void move_game_file(int plid, char code){
     rename(old_path, path);
 }
 
-void create_temp_file(char *path){
+char *create_temp_file(char *path, int plid, char type){
     FILE *ptr_for_lines = fopen(path, "r");
     FILE *game_file = fopen(path, "r");
     char buffer[50] = "";
-    char word[31];
+    char word[31] = "";
+    char letters_guessed[27] = "";
 
     int lines = count_lines(ptr_for_lines);
     fclose(ptr_for_lines);
 
     lines--;//to ignore first line
 
-    printf("lines %d\n", lines);
-
     if(fgets(buffer, 50, game_file) == NULL) exit(1);
-    sscanf(buffer, "%c", word);
+    sscanf(buffer, "%s", word);
 
-    FILE *temp_file = fopen("server/source/temp", "w+");
+
+    static char path_temp_file[50];
+    sprintf(path_temp_file, "server/source/temp/STATE_%d.txt", plid);
+    FILE *temp_file = fopen(path_temp_file, "w+");
+
     char line_to_put[50] = "";
 
     sprintf(line_to_put, "--- Transactions found: %d ---\n", lines);
@@ -101,21 +104,23 @@ void create_temp_file(char *path){
     fputs(line_to_put, temp_file);
 
     for(int i = 0; i < lines; i++){
-        if(fgets(buffer, 50, game_file) == NULL) return;
-        char type;
-        char str_exist[8];
+        if(fgets(buffer, 50, game_file) == NULL) exit(1);
+        char type_guess;
+        char str_exist[8] = "";
 
-        sscanf(buffer, "%c", &type);
+        sscanf(buffer, "%c", &type_guess);
 
 
-        if(type == 'T'){
+        if(type_guess == 'T'){
             char letter;
             sscanf(&buffer[2], "%c", &letter);
-
             if(check_letter_in_word(word, letter)) strcpy(str_exist, "TRUE");
             else strcpy(str_exist, "FALSE");
 
             sprintf(line_to_put, "Letter trial: %c - %s\n", letter, str_exist);
+
+            char aux[2]; aux[0] = letter; aux[1] = '\0';
+            strcat(letters_guessed, aux);
 
         }else{
             char word_guessed[31];
@@ -126,8 +131,41 @@ void create_temp_file(char *path){
 
         fputs(line_to_put, temp_file);
     }
+
+    fflush(temp_file);
+
+    if(type == 'a'){//active game
+        fputs("Solved so far: ", temp_file);
+        char word_to_put[31] = "";
+        for(int i = 0; i < strlen(word); i++){
+            if(belongs_to_list(letters_guessed, word[i])){
+                char temp[2]; temp[0] = word[i]; temp[1] = '\0';
+                strcat(word_to_put, temp);
+            }else{
+                strcat(word_to_put, "-");
+            }
+        }
+        strcat(word_to_put, "\n");
+        fputs(word_to_put, temp_file);
+    }else{
+        char *filename = get_filename(path);
+        char termination_type[2];
+        int k1 = 0, k2 = 0;
+        sscanf(filename, "%d_%d_%s.txt", &k1, &k2, termination_type);
+
+        if(termination_type[0] == 'W'){
+            fputs("Termination: WIN\n",temp_file);
+        }else if(termination_type[0] == 'F'){
+            fputs("Termination: FAIL\n", temp_file);
+        }else{
+            fputs("Termination: QUIT\n", temp_file);
+        }
+
+    }
+
     fclose(game_file);
     fclose(temp_file);
+    return path_temp_file;
 }
 
 int count_lines(FILE *ptr){
@@ -149,4 +187,33 @@ int check_letter_in_word(char *word, char letter){
         }
     }
     return FALSE;
+}
+
+void erase_temp_files(char *op_code_status, char *filename){
+    if(!strcmp(op_code_status, "RST ACT") || !strcmp(op_code_status, "RST FIN")){
+        char path[60];
+        sprintf(path, "server/source/temp/%s", filename);
+        remove(path);
+    }
+}
+
+int belongs_to_list(char *letters_guessed, char letter){
+    for(int i = 0; i < strlen(letters_guessed); i++){
+        if(letters_guessed[i] == letter){
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+char *get_filename(char *path){
+    char *token;
+    char *filename = (char*)malloc(30);
+
+    token = strtok(path, "/");
+    while (token != NULL){
+        strcpy(filename, token);
+        token = strtok(NULL, "/");
+    }
+    return filename;
 }

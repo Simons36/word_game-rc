@@ -131,6 +131,8 @@ void tcp_connection(){
                 count_bytes += n;
             }
             free(msg_begin);
+
+            erase_temp_files(resp->op_code_resp, resp->filename);
             
         }
 

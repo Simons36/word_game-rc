@@ -386,13 +386,18 @@ msg_file state_func(char *buffer_request){
 
     game_file_ptr = check_player_tcp(plid);
 
+    char path[50];
     if(game_file_ptr != NULL){
-        char path[50];
         sprintf(path, "server/source/GAMES/GAME_%d.txt", plid);
-        create_temp_file(path);
-        return parse_msg_file(path, "RST ACT");
+        return parse_msg_file(create_temp_file(path, plid, 'a'), "RST ACT");
     }else{
-
+        char *fname = (char*)malloc(sizeof(char) * 50);
+        int found = FindLastGame(plid, fname);
+        printf("found %d\n", found);
+        if(found){
+            return parse_msg_file(create_temp_file(fname, plid, 'f'), "RST FIN");
+        }else{
+            return msg_error_tcp(MSG_STATE_ERROR);
+        }
     }
-    return NULL;
 }
