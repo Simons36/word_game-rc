@@ -47,8 +47,6 @@ int FindTopScores(){
 
     n_entries = scandir("server/source/SCORES/", &filelist, 0, alphasort);
 
-    printf("n_entries = %d\n", n_entries);
-
     i_file = 0;
     if (n_entries < 0){
         return 0;
@@ -61,10 +59,9 @@ int FindTopScores(){
                 fp = fopen(fname, "r");
 
                 if(fp != NULL){
-                    fscanf(fp , "%d %s %s %d %d" ,
+                    if(fscanf(fp , "%d %s %s %d %d" ,
                         &list->score[i_file], list->PLID[i_file] , list->word[i_file] ,&list->n_succ[i_file] ,
-                        &list->n_tot[i_file]);
-                    printf("%03d %s %s %d %d\n",list->score[i_file], list->PLID[i_file], list->word[i_file], list->n_succ[i_file], list->n_tot[i_file]);
+                        &list->n_tot[i_file]) != 5) exit(1);
                     fclose(fp);
                     ++i_file;
                 }
@@ -84,8 +81,9 @@ int FindTopScores(){
 
 
 char *create_scoreboard_file(){
-    char *path = (char*)malloc(sizeof(char) * 50);
-    strcpy(path, "server/source/scoreboard/scoreboard.txt");
+    char *path = (char*)malloc(sizeof(char) * 60);
+    sprintf(path, "%s%07d.txt", "server/source/scoreboard/TOPSCORES_", getpid());
+    printf("%s\n", path);
     FILE * fp ;
     char file_line[100] = "";
     int i = 0;
@@ -107,14 +105,12 @@ char *create_scoreboard_file(){
         fputs(top_line, fp);
 
         put_empty_line(line_size, fp);
-
-        printf("%d\n", list->n_scores);
+        
         while(i < list->n_scores){
             file_line[0] = '\0';
             if(i != 10 - 1 ){
                 strcat(file_line, " ");
             }
-            printf("i3uibfew\n");
             char temp_string[90] = "";
             char temp_word[41] = "";
             strcpy(temp_word, list->word[i]);
@@ -124,12 +120,12 @@ char *create_scoreboard_file(){
             sscanf(list->PLID[i], "%d", &plid);
 
             sprintf(temp_string,"%d - %03d  %06d  %s%d             %d\n",
-                                                                        i + 1,
-                                                                        list->score[i], 
-                                                                        plid, 
-                                                                        temp_word, 
-                                                                        list->n_succ[i], 
-                                                                        list->n_tot[i]);
+                i + 1,
+                list->score[i], 
+                plid, 
+                temp_word, 
+                list->n_succ[i], 
+                list->n_tot[i]);
 
             strcat(file_line, temp_string);
             printf("%s", file_line);
@@ -138,7 +134,6 @@ char *create_scoreboard_file(){
         }
         fclose(fp);
     }
-    printf("path: %s\n", path);
     return path;
 }
 

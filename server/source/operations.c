@@ -54,7 +54,6 @@ msg_file process_request_tcp(char *buffer_request){
     if(!strcmp(command, HINT_MSG)){
         return hint_func(buffer_request);
     }else if (!strcmp(command, SCOREBOARD_MSG)){
-        printf("rguiwfbef\n");
         return scoreboard_func(buffer_request);
     }
 
@@ -160,13 +159,19 @@ char* play_func_aux(int plid, char letter, int trial){
         strcpy(&str_return[strlen(str_return)], "DUP ");
     }else if(return_num == RETURN_PLAY_OVR){
         strcpy(&str_return[strlen(str_return)], "OVR ");
+        add_play_game_file(plid, letter);
+        move_game_file(plid, 'F');
     }else if(return_num == RETURN_PLAY_INV){
         strcpy(&str_return[strlen(str_return)], "INV ");
     }else if(return_num == RETURN_PLAY_WIN){
         strcpy(&str_return[strlen(str_return)], "WIN ");
+        add_play_game_file(plid, letter);
+        move_game_file(plid, 'W');
     }else if(return_num == RETURN_PLAY_NOK){
         strcpy(&str_return[strlen(str_return)], "NOK ");
+        add_play_game_file(plid, letter);
     }else{
+        add_play_game_file(plid, letter);
         return parse_msg_play_ok(n_pos, trial);
     }
 
@@ -303,14 +308,17 @@ char *guess_func_aux(int plid, char *word, int trials){
     }else{
         increment_guesses(plid);
 
+        add_guess_game_file(plid, word);
         if(!strcmp(word, get_word(plid))){
             strcpy(&resp[strlen(GUESS_MSG_RESP)], " WIN ");
             to_remove = TRUE;
+            move_game_file(plid, 'W');
         }else{
             increment_errors(plid);
             if(check_over_error_limit(plid)){
                 strcpy(&resp[strlen(GUESS_MSG_RESP)], " OVR ");
                 to_remove = TRUE;
+                move_game_file(plid, 'F');
             }else{
                 add_wrong_word(plid, word);
                 strcpy(&resp[strlen(GUESS_MSG_RESP)], " NOK ");
@@ -357,7 +365,7 @@ msg_file msg_error_tcp(char* msg){
 msg_file scoreboard_func(){
 
     if(FindTopScores() == 0){
-        return msg_error_tcp("RSB EMPTY");
+        return msg_error_tcp("RSB EMPTY\n");
     }
     
     char *path = create_scoreboard_file();
