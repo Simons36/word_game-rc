@@ -16,3 +16,5 @@ script 07 funciona com o servidor em valgrind
 script 20 funciona, mas no fim cliente da double free; com valgrind(no cliente)
 isto não acontece
 script 23 funciona com valgrind no servidor
+
+Cliente e servidor estão, por default, a comunicar com o localhost
