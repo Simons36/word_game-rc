@@ -10,6 +10,8 @@
 
 #define MSG_HINT_ERROR "RHL NOK\n"
 
+#define MSG_STATE_ERROR "RST NOK\n"
+
 typedef struct msgfile{
     char *filename;
     ssize_t f_size;
@@ -50,5 +52,7 @@ msg_file hint_func();
 msg_file process_request_tcp(char *buffer_request);
 
 msg_file msg_error_tcp(char* msg);
+
+msg_file state_func(char *buffer_request);
 
 #endif

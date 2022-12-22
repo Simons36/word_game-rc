@@ -43,6 +43,6 @@ void hint_command(char *plid);
 
 void process_request_tcp(int socket);
 
-char *read_one_byte(int socket);
+void state_command(char *plid);
 
 #endif

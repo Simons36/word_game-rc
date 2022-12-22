@@ -55,7 +55,7 @@ void increment_trials(){
 }
 
 void set_letter_by_pos(char letter, int pos){
-    game_info->letters_guessed[pos] = letter;
+    game_info->letters_guessed[pos - 1] = letter;
 }
 
 int get_errors(){

@@ -28,4 +28,7 @@
 #define HINT_MSG "GHL"
 #define HINT_MSG_RESP "RHL"
 
+#define STATE_MSG "STA"
+#define STATE_MSG_RESP "RST"
+
 #endif

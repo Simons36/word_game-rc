@@ -76,3 +76,77 @@ void move_game_file(int plid, char code){
 
     rename(old_path, path);
 }
+
+void create_temp_file(char *path){
+    FILE *ptr_for_lines = fopen(path, "r");
+    FILE *game_file = fopen(path, "r");
+    char buffer[50] = "";
+    char word[31];
+
+    int lines = count_lines(ptr_for_lines);
+    fclose(ptr_for_lines);
+
+    lines--;//to ignore first line
+
+    printf("lines %d\n", lines);
+
+    if(fgets(buffer, 50, game_file) == NULL) exit(1);
+    sscanf(buffer, "%c", word);
+
+    FILE *temp_file = fopen("server/source/temp", "w+");
+    char line_to_put[50] = "";
+
+    sprintf(line_to_put, "--- Transactions found: %d ---\n", lines);
+
+    fputs(line_to_put, temp_file);
+
+    for(int i = 0; i < lines; i++){
+        if(fgets(buffer, 50, game_file) == NULL) return;
+        char type;
+        char str_exist[8];
+
+        sscanf(buffer, "%c", &type);
+
+
+        if(type == 'T'){
+            char letter;
+            sscanf(&buffer[2], "%c", &letter);
+
+            if(check_letter_in_word(word, letter)) strcpy(str_exist, "TRUE");
+            else strcpy(str_exist, "FALSE");
+
+            sprintf(line_to_put, "Letter trial: %c - %s\n", letter, str_exist);
+
+        }else{
+            char word_guessed[31];
+            sscanf(&buffer[2], "%s", word_guessed);
+
+            sprintf(line_to_put, "Word guess: %s\n", word_guessed);
+        }
+
+        fputs(line_to_put, temp_file);
+    }
+    fclose(game_file);
+    fclose(temp_file);
+}
+
+int count_lines(FILE *ptr){
+    int lines = 0;
+    char ch;
+    while(!feof(ptr)){
+        ch = fgetc(ptr);
+        if(ch == '\n'){
+            lines++;
+        }
+    }
+    return lines;
+}
+
+int check_letter_in_word(char *word, char letter){
+    for(int i = 0; i < strlen(word); i++){
+        if(word[i] == letter){
+            return TRUE;
+        }
+    }
+    return FALSE;
+}

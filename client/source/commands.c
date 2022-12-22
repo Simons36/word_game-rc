@@ -174,6 +174,7 @@ void play_place_letter(char letter, char* n_pos){
     for(int i = 0; i < num_times; i++){
         int pos = 0;
         if(sscanf(&n_pos[2 * numbs_read], "%d", &pos) != 1) exit(1);
+        printf("yeet %d\n", pos);
         numbs_read++;
         set_letter_by_pos(letter, pos);
     }
@@ -194,7 +195,7 @@ void func_win(){
 int quit_command(char* plid){
     char resp[64];
     char msg_send[64];
-    sprintf(msg_send, "%s %s\n", QUIT_COM, plid);
+    sprintf(msg_send, "%s %s\n", QUIT_MSG, plid);
 
     strcpy(resp, send_msg_udp(msg_send, strlen(msg_send)));
     
@@ -266,6 +267,12 @@ void process_request_tcp(int socket){
             return;
         }
         strcpy(path, "client/source/scoreboard");
+    }else if(!strcmp(command, STATE_MSG_RESP)){
+        if(!strcmp(status, "NOK")){
+            printf("Error: There are no games for this player");
+            return;
+        }
+        strcpy(path, "client/source/state");
     }
 
     strcat(path, "/");
@@ -294,7 +301,7 @@ void process_request_tcp(int socket){
     fclose(ptr);
     free(buffer);
 
-    if(!strcmp(command, SCOREBOARD_MSG_RESP)){
+    if(strcmp(command, HINT_MSG_RESP)){ // if it is NOT the hint command, prints to stdout
         FILE *ptr_to_read = fopen(path, "r");
         char str[100];
         while (fgets(str, 100, ptr_to_read)){
@@ -317,4 +324,10 @@ char *read_one_byte(int socket){
     }
 
     return str;
+}
+
+void state_command(char *plid){
+    char msg[15];
+    sprintf(msg, "%s %s\n", STATE_MSG, plid);
+    process_request_tcp(send_msg_tcp(msg, strlen(msg)));
 }

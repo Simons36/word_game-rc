@@ -13,4 +13,10 @@ void add_guess_game_file(int plid, char *word);
 
 void move_game_file(int plid, char letter);
 
+int count_lines(FILE *ptr);
+
+int check_letter_in_word(char *word, char letter);
+
+void create_temp_file(char *path);
+
 #endif

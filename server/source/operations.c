@@ -54,7 +54,9 @@ msg_file process_request_tcp(char *buffer_request){
     if(!strcmp(command, HINT_MSG)){
         return hint_func(buffer_request);
     }else if (!strcmp(command, SCOREBOARD_MSG)){
-        return scoreboard_func(buffer_request);
+        return scoreboard_func();
+    }else if(!strcmp(command, STATE_MSG)){
+        return state_func(buffer_request);
     }
 
     return NULL;
@@ -227,7 +229,7 @@ char* parse_msg_play_ok(int **n_pos, int trial){
     int len = get_len_n_pos(n_pos);
     sprintf(&resp[strlen(resp)], "%d ", len);
     for(int i = 0; i < len; i++){
-        sprintf(&resp[strlen(resp)], "%d ", *n_pos[i]);
+        sprintf(&resp[strlen(resp)], "%d ", *n_pos[i] + 1);
     }
     strcpy(&resp[strlen(resp)], "\n");
     return resp;
@@ -370,4 +372,27 @@ msg_file scoreboard_func(){
     
     char *path = create_scoreboard_file();
     return parse_msg_file(path, "RSB OK");
+}
+
+msg_file state_func(char *buffer_request){
+    char op_code[4];
+    char plid_str[20];
+    int plid;
+    FILE *game_file_ptr;
+
+    if(sscanf(buffer_request, "%s %s\n", op_code, plid_str) != 2) return msg_error_tcp(MSG_STATE_ERROR);
+
+    if((plid = plid_valid(plid_str)) == FALSE) return msg_error_tcp(MSG_STATE_ERROR);
+
+    game_file_ptr = check_player_tcp(plid);
+
+    if(game_file_ptr != NULL){
+        char path[50];
+        sprintf(path, "server/source/GAMES/GAME_%d.txt", plid);
+        create_temp_file(path);
+        return parse_msg_file(path, "RST ACT");
+    }else{
+
+    }
+    return NULL;
 }
