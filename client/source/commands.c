@@ -246,6 +246,7 @@ void process_request_tcp(int socket){
     int file_size;
 
     void *temp_buffer = malloc(50);
+    memset(temp_buffer, '\0', 50);
     n = read(socket, temp_buffer, 50);
     sscanf(temp_buffer, "%s %s %s %s", command, status, filename, file_size_str);
 
@@ -276,6 +277,7 @@ void process_request_tcp(int socket){
     strcat(path, filename);
 
     void *buffer = malloc(file_size);
+    memset(buffer, ' ', file_size);
 
     memcpy(buffer, temp_buffer + start_f_data, 50 - start_f_data);
     free(temp_buffer);

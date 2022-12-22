@@ -4,6 +4,7 @@
 #include <string.h>
 
 sessions sess_info[MAX_PLAYERS];
+int file_picker = 0;
 
 int check_player(int plid){
     for (int i = 0; i < MAX_PLAYERS; i++){
@@ -82,27 +83,25 @@ int remove_player(int plid){
 }
 
 char *pick_word_from_file(int n_line, char **path_image){
-    srand(time(NULL));
-    FILE *ptr, *ptrcpy;
+    FILE *ptr;
     char *word = (char *)malloc(sizeof(char) * 30);
     //*path_image = (char*)malloc(sizeof(char) *50);
 
     ptr = fopen("server/source/words/words.txt", "r");
-    ptrcpy = fopen("server/source/words/words.txt", "r");
 
     if (ptr == NULL){
         printf("Word file could not be opened\n");
         return NULL;
     }
 
-    int r = rand();
-
-    r = r % get_n_words(ptrcpy);
+    int r = file_picker;
 
     for (int i = 0; i < r; i++){
         if (fscanf(ptr, "%*[^\n]\n") != 0)
             return NULL; // skip line
     }
+
+    file_picker++;
 
     if (fscanf(ptr, "%s %s", word , *path_image) != 2){
         printf("Error reading the word\n");
