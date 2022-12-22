@@ -54,7 +54,7 @@ int *put_player(int plid, char **word, char **path_image){
                 sess_info[i]->letters_left[k] = NOT_GUESSED;
             }
 
-            sess_info[i]->words_sent = calloc(1, sizeof(char*));
+            sess_info[i]->words_sent = calloc(26, sizeof(char*));
 
             if (verbose_flag){
                 printf("PLID=%d: new game; word = \"%s\" (%d letters)\n", plid, sess_info[i]->word_to_guess, len_word);
@@ -87,7 +87,7 @@ char *pick_word_from_file(int n_line, char **path_image){
     char *word = (char *)malloc(sizeof(char) * 30);
     //*path_image = (char*)malloc(sizeof(char) *50);
 
-    ptr = fopen("server/source/words/words.txt", "r");
+    ptr = fopen(word_file_global, "r");
 
     if (ptr == NULL){
         printf("Word file could not be opened\n");
@@ -104,8 +104,11 @@ char *pick_word_from_file(int n_line, char **path_image){
     file_picker++;
 
     if (fscanf(ptr, "%s %s", word , *path_image) != 2){
-        printf("Error reading the word\n");
-        return NULL;
+        file_picker = 1;
+        ptr = fopen(word_file_global, "r");
+        if(fscanf(ptr, "%s %s", word , *path_image) != 2){
+            return "ERR\n";
+        }
     }
 
     return word;
@@ -248,9 +251,7 @@ void create_file(int k){
     int score;
     score = get_file_name(file_name, k);
     sprintf(file_path, "server/source/SCORES/%s", file_name);
-    printf("%s\n", file_path);
     sprintf(file_line,"%03d %d %s %d %d", score, sess_info[k]->plid, sess_info[k]->word_to_guess, sess_info[k]->right_guesses, sess_info[k]->guesses);
-    printf("%s\n", file_line);
     fp = fopen(file_path, "w+");
     if ( fp == NULL){  
         printf("Failed to create file\n");
@@ -386,6 +387,10 @@ msg_file parse_msg_file(char *path, char *op_code){
     msg_to_send->file = fopen(path, "rb");
 
     msg_to_send->f_size = get_filesize(path);
+    
+    if(verbose_flag){
+        //printf("send hint file '%s' (%zd bytes)\n",msg_to_send->filename, msg_to_send->f_size);
+    }
 
     msg_to_send->op_code_resp = (char*)malloc(sizeof(char)*10);
     strcpy(msg_to_send->op_code_resp, op_code);

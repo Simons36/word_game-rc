@@ -1,5 +1,4 @@
 #include "../include/commands.h"
-#include "../include/data.h"
 #include "../include/network.h"
 #include "../include/game_data.h"
 
@@ -267,7 +266,7 @@ void process_request_tcp(int socket){
         strcpy(path, "client/source/scoreboard");
     }else if(!strcmp(command, STATE_MSG_RESP)){
         if(!strcmp(status, "NOK")){
-            printf("Error: There are no games for this player");
+            printf("Error: There are no games for this player\n");
             return;
         }
         strcpy(path, "client/source/state");

@@ -13,7 +13,6 @@ int FindLastGame (int plid, char *fname){
     sprintf(dirname, "server/source/GAMES/%d/", plid);
     n_entries = scandir(dirname, &filelist,0, alphasort);
     found = 0;
-    printf("%s\n", dirname);
     
     if(n_entries <= 0)
         return 0;

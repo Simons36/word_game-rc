@@ -37,8 +37,9 @@ int main(int argc, char *argv[])
                 free(letter);
             }else{
                 printf("Error: there is no ongoing game\n");
+                //ignore_line();
             }
-            ignore_line();
+            //ignore_line();
         }
         else if (!strcmp(command, QUIT_COM) || !strcmp(command, EXIT_COM))
         {

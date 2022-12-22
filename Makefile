@@ -13,8 +13,8 @@ CLIENT_SRC = $(wildcard $(CLIENT)/source/*.c)
 SERVER_OBJ = $(patsubst $(SERVER)/source/%.c,$(SERVER)/object/%.o,$(SERVER_SRC))
 CLIENT_OBJ = $(patsubst $(CLIENT)/source/%.c,$(CLIENT)/object/%.o,$(CLIENT_SRC))
 
-SERVER_BIN = $(SERVER)/bin/server
-CLIENT_BIN = $(CLIENT)/bin/client
+SERVER_BIN = GS
+CLIENT_BIN = player
 
 SERVER_INC = $(wildcard $(SERVER)/include/*.h,$(COMMON)/include/*.h)
 CLIENT_INC = $(wildcard $(CLIENT)/include/*.h,$(COMMON)/include/*.h)
@@ -22,9 +22,7 @@ CLIENT_INC = $(wildcard $(CLIENT)/include/*.h,$(COMMON)/include/*.h)
 all: client server
 
 $(shell mkdir -p $(SERVER)/object)
-$(shell mkdir -p $(SERVER)/bin)
 $(shell mkdir -p $(CLIENT)/object)
-$(shell mkdir -p $(CLIENT)/bin)
 
 client: $(CLIENT_OBJ)
 	$(CC) $(CFLAGS) -o $(CLIENT_BIN) $(CLIENT_OBJ)

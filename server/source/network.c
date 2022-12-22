@@ -8,7 +8,9 @@ int verbose_flag = FALSE;
 int set_args(int argc, char *argv[]){
     gsport = SERVER_PORT;
 
-    for(int i = 1; i < argc; i+=2){
+    strcpy(word_file_global, argv[1]);
+
+    for(int i = 2; i < argc; i+=2){
         if(!strcmp(argv[i], "-v")){
             verbose_flag = TRUE;
         }else if(!strcmp(argv[i], "-p")){
@@ -56,12 +58,14 @@ void udp_connection(){
             (struct sockaddr*)&addr,&addrlen);
         if(n==-1)/*error*/exit(1);
 
+        /*
         ssize_t k;
         k = write(1,"received: ",10);
         if(k != 10) exit(1);
 
         k = write(1,buffer,n);
         if(k != n) exit(1);
+        */
 
         strcpy(response, process_request(buffer));
     

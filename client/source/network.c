@@ -53,12 +53,14 @@ char* send_msg_udp(void *buffer_msg, size_t len_msg){
     hints.ai_family = AF_INET; //IPv4
     hints.ai_socktype = SOCK_DGRAM; //UDP socket
 
-    struct timeval time_wait_response;
-    time_wait_response.tv_sec = TIME_WAIT_RESPONSE;
-    time_wait_response.tv_usec = 0;
+    if(TIMER_ACTIVE){
+        struct timeval time_wait_response;
+        time_wait_response.tv_sec = TIME_WAIT_RESPONSE;
+        time_wait_response.tv_usec = 0;
 
 
-    setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, (void*)&(time_wait_response), sizeof(struct timeval)); /*waits for response 5 seconds*/
+        setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, (void*)&(time_wait_response), sizeof(struct timeval)); /*waits for response 5 seconds*/
+    }
 
 
     errcode = getaddrinfo(gs_ip_port.gsip, gs_ip_port.gsport, &hints,&res);
@@ -69,6 +71,7 @@ char* send_msg_udp(void *buffer_msg, size_t len_msg){
 
 
     for(int i = 0; i < 3; i++){/*if server doesn´t respond try to send message three times*/
+        if(!TIMER_ACTIVE) i = 2;
         n = sendto(fd, buffer_msg, len_msg, 0, res->ai_addr, res->ai_addrlen);
         if(n==-1) exit(1); //error
 

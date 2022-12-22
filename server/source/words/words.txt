@@ -1,3 +1,0 @@
-dog  server/source/words/images/dog.jpg
-banana  server/source/words/images/banana.jpg
-elefante  server/source/words/images/elefante.jpg

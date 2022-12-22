@@ -136,7 +136,7 @@ char *create_temp_file(char *path, int plid, char type){
 
     if(type == 'a'){//active game
         fputs("Solved so far: ", temp_file);
-        char word_to_put[31] = "";
+        char word_to_put[50] = "";
         for(int i = 0; i < strlen(word); i++){
             if(belongs_to_list(letters_guessed, word[i])){
                 char temp[2]; temp[0] = word[i]; temp[1] = '\0';

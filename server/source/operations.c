@@ -112,7 +112,7 @@ char* parse_msg_start(int * arr_let_err){
 
 char* play_func(char *input){
     int plid;
-    char temp[128];
+    char temp[128] = "";
     char letter;
     size_t count = strlen(PLAY_MSG);
 
@@ -150,9 +150,8 @@ char* play_func(char *input){
 }
 
 char* play_func_aux(int plid, char letter, int trial){
-    int **n_pos = calloc(1, sizeof(int*));
+    int **n_pos = calloc(30, sizeof(int*));
     int return_num = play_letter(plid, letter, trial, n_pos);
-
     static char str_return[30];
     strcpy(str_return, "RLG ");
 
@@ -272,7 +271,7 @@ char* quit_func(char *input){
 char* guess_func(char *input){
     char op_code[4];
     char plid_str[20];
-    char word[31];
+    char word[128];
     int trials, plid;
     if(sscanf(input, "%s %s %s %d", 
                                     op_code, 

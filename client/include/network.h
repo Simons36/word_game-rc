@@ -3,9 +3,10 @@
 
 #define LOCALHOST_IP "127.0.0.1"
 #define BUFFER_SIZE 128
-#define TIME_WAIT_RESPONSE 5
+#define TIME_WAIT_RESPONSE 10
 #define PORT_MIN 1024
 #define PORT_MAX 65536
+#define TIMER_ACTIVE TRUE
 
 #include "client.h"
 #include "../../common/network_common.h"
