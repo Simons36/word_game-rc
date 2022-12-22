@@ -1,8 +1,0 @@
-{
-  "files.associations": {
-    "network.h": "c",
-    "client.h": "c",
-    "server.h": "c"
-  },
-  "C_Cpp.errorSquiggles": "enabled"
-}
